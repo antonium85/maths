@@ -1,0 +1,1078 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Équation de droite · QCM</title>
+<meta name="description" content="QCM chronométré sur l’équation de droite : coefficient directeur, équation réduite, droite passant par deux points, lecture graphique, parallèles et perpendiculaires, équation cartésienne, intersection.">
+<style>
+:root{
+  --bg:#f6f7fb;--surface:#ffffff;--text:#1c1f2b;--muted:#5b6275;--line:#dfe3ee;
+  --accent:#3f4fd8;--accent-ink:#ffffff;--accent-soft:#e8eaff;
+  --ok:#14773c;--ok-soft:#e3f6ea;--bad:#b4232a;--bad-soft:#fdecec;--warn:#9a5b00;
+  --radius:14px;
+  --math:"Cambria Math","STIX Two Math","Latin Modern Math",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#12141c;--surface:#1b1e29;--text:#eceef6;--muted:#a1a8bd;--line:#2c3144;
+    --accent:#8c97ff;--accent-ink:#10122a;--accent-soft:#252a4d;
+    --ok:#5fd18a;--ok-soft:#173424;--bad:#ff8a8f;--bad-soft:#3a1d20;--warn:#f1b560}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+[hidden]{display:none!important}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+header.top{background:var(--surface);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px}
+.brand{font:inherit;font-weight:700;background:none;border:0;color:var(--text);cursor:pointer;padding:8px 0}
+.brand span{color:var(--accent)}
+main{padding:20px 0 48px}
+h1{font-size:1.6rem;line-height:1.2;margin:.2rem 0 .5rem}
+h2{font-size:1.15rem;margin:1.6rem 0 .6rem}
+h3{font-size:1rem;margin:1.2rem 0 .4rem}
+h1:focus,h2:focus,#qPrompt:focus{outline:none}
+.lead{color:var(--muted);margin:0 0 1rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:10px 16px;border-radius:12px;cursor:pointer;min-height:44px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent}
+.btn.small{min-height:36px;padding:6px 12px;font-size:.9rem}
+.btn.big{width:100%;font-size:1.1rem;min-height:52px}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+details.card summary{cursor:pointer;font-weight:600}
+details.card[open] summary{margin-bottom:10px}
+details.card ul{margin:.4rem 0 .8rem;padding-left:1.2rem}
+details.card li{margin:.25rem 0}
+.mode-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:600px){.mode-grid{grid-template-columns:1fr 1fr}}
+.mode{position:relative;display:block;cursor:pointer}
+.mode input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.mbody{display:block;height:100%;background:var(--surface);border:2px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.mbody strong{display:block}
+.mbody small{display:block;color:var(--muted)}
+.mbody em{display:block;font-style:normal;color:var(--muted);font-size:.85rem;margin-top:4px}
+.mode input:checked + .mbody{border-color:var(--accent);background:var(--accent-soft)}
+.mode input:focus-visible + .mbody{outline:3px solid var(--accent);outline-offset:2px}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.seg span{display:block;border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 16px;font-weight:600;min-height:44px;line-height:26px}
+.seg input:checked + span{border-color:var(--accent);background:var(--accent-soft)}
+.seg input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
+.hint{color:var(--muted);font-size:.9rem;margin:.5rem 0 0}
+.quizbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.badge{display:inline-block;background:var(--accent-soft);border-radius:999px;padding:2px 10px;font-size:.85rem;margin-left:6px}
+.timers{display:flex;gap:14px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.timer.over{color:var(--warn);font-weight:700}
+.pbar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:14px}
+.pbar>div{height:100%;background:var(--accent);width:0;transition:width .25s}
+.prompt{margin:0 0 14px;font-size:1.05rem}
+.math{font-family:var(--math);font-size:1.35em;white-space:nowrap}
+.choices{display:grid;gap:10px;margin-bottom:10px}
+.choice{font-family:var(--math);font-size:1.2rem;text-align:left;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);cursor:pointer;min-height:48px}
+.choice:hover:not(:disabled){border-color:var(--accent)}
+.choice:disabled{cursor:default;color:var(--text)}
+.choice.right{border-color:var(--ok);background:var(--ok-soft)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.ltr{display:inline-block;min-width:1.4em;opacity:.6;font-family:system-ui,sans-serif;font-size:.85rem;font-weight:700;margin-right:8px}
+.fb{margin-top:14px;border-radius:12px;padding:12px 14px;border:1px solid var(--line)}
+.fb.ok{background:var(--ok-soft);border-color:var(--ok)}
+.fb.bad{background:var(--bad-soft);border-color:var(--bad)}
+.fb p{margin:0 0 6px}
+.explain{margin:8px 0 12px;font-size:.97rem}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0}
+@media(min-width:600px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:.85rem}
+.err{margin:10px 0}
+.err .math{font-size:1.2em}
+.err details{margin-top:6px}
+.err summary{cursor:pointer;color:var(--accent);font-weight:600}
+.graph{display:block;width:100%;max-width:320px;height:auto;margin:10px auto 0;background:var(--bg);border:1px solid var(--line);border-radius:12px}
+.err .graph{max-width:220px;margin-left:0}
+.graph .gl{stroke:var(--line);stroke-width:1}
+.graph .ga{stroke:var(--muted);stroke-width:1.6}
+.graph .gd{stroke:var(--accent);stroke-width:2.6;stroke-linecap:round}
+.graph .gp{fill:var(--accent);stroke:var(--surface);stroke-width:1.5}
+.graph text{fill:var(--muted);font:10px system-ui,sans-serif}
+table{width:100%;border-collapse:collapse;font-size:.95rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th{color:var(--muted);font-weight:600;font-size:.85rem}
+tr:last-child td{border-bottom:0}
+.tablewrap{overflow-x:auto}
+.note{color:var(--muted);font-size:.85rem;margin-top:28px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <button class="brand" id="brandBtn" type="button">Équation de droite <span>· QCM</span></button>
+  <button class="btn small" id="progBtn" type="button">Ma progression</button>
+</div></header>
+
+<main class="wrap">
+<noscript><p class="card">Cette page a besoin de JavaScript pour générer les questions.</p></noscript>
+
+<!-- ACCUEIL -->
+<section id="home" aria-labelledby="homeTitle">
+  <h1 id="homeTitle">Équation de droite : QCM chronométré</h1>
+  <p class="lead">Séries de questions à choix multiples, une seule réponse correcte à chaque fois. Chaque erreur est corrigée avec la méthode, puis ajoutée à ton carnet pour être retravaillée plus tard.</p>
+
+  <details class="card" id="memo">
+    <summary>Rappels : formules et astuces</summary>
+    <ul>
+      <li><strong>Équation réduite</strong> d’une droite non verticale : y = mx + p. <strong>m</strong> est le coefficient directeur (la pente), <strong>p</strong> l’ordonnée à l’origine : la droite coupe l’axe des ordonnées en (0 ; p).</li>
+      <li><strong>Droites particulières</strong> : horizontale y = k (m = 0) ; verticale x = k (pas de coefficient directeur, donc pas d’équation réduite).</li>
+      <li><strong>Avec deux points</strong> A et B (xA ≠ xB) : m = (yB − yA) / (xB − xA). Ensuite p = yA − m × xA.</li>
+      <li><strong>Appartenance</strong> : le point M(x ; y) est sur d : y = mx + p si et seulement si y = m × x + p est vrai.</li>
+      <li><strong>Parallèles</strong> : même coefficient directeur (m = m′). <strong>Perpendiculaires</strong> (repère orthonormé) : m × m′ = −1, donc m′ = −1/m.</li>
+      <li><strong>Équation cartésienne</strong> : ax + by + c = 0, avec (a ; b) ≠ (0 ; 0). Vecteur directeur u(−b ; a). Vecteur normal n(a ; b). Si b ≠ 0 : m = −a/b et p = −c/b.</li>
+      <li><strong>Droite définie par un point et un vecteur normal</strong> : la droite passant par A(xA ; yA) de vecteur normal n(a ; b) a pour équation a(x − xA) + b(y − yA) = 0, soit ax + by + c = 0 avec c = −(a × xA + b × yA).</li>
+      <li><strong>Parallèles et perpendiculaires en cartésien</strong> : d et d′ sont parallèles si leurs coefficients (a ; b) et (a′ ; b′) sont proportionnels (ab′ − a′b = 0), perpendiculaires si aa′ + bb′ = 0.</li>
+      <li><strong>Médiatrice de [AB]</strong> : droite passant par le milieu I de [AB], de vecteur normal AB.</li>
+      <li><strong>Intersection</strong> de y = m₁x + p₁ et y = m₂x + p₂ : on résout m₁x + p₁ = m₂x + p₂ pour trouver x, puis on calcule y.</li>
+      <li><strong>Pièges classiques</strong> : oublier le signe de p ; calculer Δx / Δy au lieu de Δy / Δx ; confondre x = k et y = k ; confondre vecteur directeur et vecteur normal.</li>
+    </ul>
+  </details>
+
+  <h2>1. Choisis un entraînement</h2>
+  <div class="mode-grid" id="modeGrid" role="radiogroup" aria-label="Type d’entraînement"></div>
+
+  <h2>2. Niveau</h2>
+  <div class="seg" role="radiogroup" aria-label="Niveau" id="levelSeg">
+    <label><input type="radio" name="level" value="facile"><span>Facile</span></label>
+    <label><input type="radio" name="level" value="moyen"><span>Moyen</span></label>
+    <label><input type="radio" name="level" value="difficile"><span>Difficile</span></label>
+  </div>
+  <p class="hint" id="levelHint"></p>
+
+  <h2>3. Nombre de questions</h2>
+  <div class="seg" role="radiogroup" aria-label="Nombre de questions" id="lenSeg">
+    <label><input type="radio" name="len" value="5"><span>5</span></label>
+    <label><input type="radio" name="len" value="10"><span>10</span></label>
+    <label><input type="radio" name="len" value="15"><span>15</span></label>
+  </div>
+
+  <div class="row">
+    <button class="btn primary big" id="startBtn" type="button">Commencer la série</button>
+  </div>
+  <div class="row">
+    <button class="btn" id="bookBtn" type="button">Carnet d’erreurs</button>
+  </div>
+  <p class="hint">Le carnet regroupe les questions ratées. Une question réussie depuis le carnet en sort.</p>
+  <p class="note" id="storeNote" hidden>Ce navigateur bloque l’enregistrement local : l’historique et le carnet seront perdus à la fermeture de la page.</p>
+  <p class="note">Page statique : aucune donnée n’est envoyée nulle part. L’historique et le carnet restent dans ce navigateur, sur cet appareil. Au clavier, les touches 1 à 4 (ou A à D) choisissent une réponse, Entrée passe à la question suivante.</p>
+</section>
+
+<!-- QUESTIONS -->
+<section id="quiz" hidden aria-label="Série en cours">
+  <div class="quizbar">
+    <div><strong id="qNum"></strong><span class="badge" id="qMode"></span></div>
+    <div class="timers" aria-hidden="true"><span>Total <b id="tTotal">0:00</b></span><span id="tQ" class="timer">0 s</span></div>
+    <button class="btn ghost small" id="quitBtn" type="button">Quitter</button>
+  </div>
+  <div class="pbar" aria-hidden="true"><div id="pfill"></div></div>
+  <div class="card">
+    <div class="prompt" id="qPrompt"></div>
+    <div id="qChoices" class="choices" role="group" aria-label="Réponses possibles"></div>
+    <div id="feedback" role="status" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- BILAN -->
+<section id="results" hidden aria-labelledby="resTitle">
+  <h2 id="resTitle">Bilan de la série</h2>
+  <div class="stats" id="resStats"></div>
+  <p id="resMsg" class="lead"></p>
+  <div id="resErrors"></div>
+  <div class="row" id="resActions"></div>
+</section>
+
+<!-- PROGRESSION -->
+<section id="progress" hidden aria-labelledby="progTitle">
+  <h2 id="progTitle">Ma progression</h2>
+  <div id="progBody"></div>
+  <div class="row">
+    <button class="btn" id="progHome" type="button">Retour</button>
+    <button class="btn ghost" id="progReset" type="button">Effacer l’historique</button>
+  </div>
+</section>
+</main>
+
+<script>
+(function(){
+'use strict';
+
+/* ==LOGIC-START== */
+const MINUS='−';
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=a%b;a=b;b=t;}return a;}
+function lcm(a,b){return Math.abs(a*b)/gcd(a,b);}
+function F(n,d){if(d===undefined)d=1;if(d<0){n=-n;d=-d;}const g=gcd(n,d)||1;return [n/g,d/g];}
+function fi(n){return [n,1];}
+function fneg(f){return [-f[0],f[1]];}
+function fadd(a,b){return F(a[0]*b[1]+b[0]*a[1],a[1]*b[1]);}
+function fsub(a,b){return F(a[0]*b[1]-b[0]*a[1],a[1]*b[1]);}
+function fmul(a,b){return F(a[0]*b[0],a[1]*b[1]);}
+function finv(f){return F(f[1],f[0]);}
+function feq(a,b){return a[0]*b[1]===b[0]*a[1];}
+function fnum(f){return f[0]/f[1];}
+function fmtInt(n){return n<0?MINUS+Math.abs(n):String(n);}
+function fmtF(f){return f[1]===1?fmtInt(f[0]):fmtInt(f[0])+'/'+f[1];}
+function par(x){const s=typeof x==='number'?fmtInt(x):fmtF(x);return s.charAt(0)===MINUS?'('+s+')':s;}
+function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=arr[i];arr[i]=arr[j];arr[j]=t;}return arr;}
+function rnz(R){let k;do{k=rnd(-R,R);}while(k===0);return k;}
+function cr(a,b,c,d){return a*d-b*c;}
+
+/* Affichage des équations */
+function termX(m){
+  if(m[0]===0)return '';
+  const n=Math.abs(m[0]),d=m[1];
+  const s=d===1?(n===1?'x':n+'x'):'('+n+'/'+d+')x';
+  return (m[0]<0?MINUS:'')+s;
+}
+function eqStr(m,p){
+  const t=termX(m);
+  if(!t)return 'y = '+fmtF(p);
+  let s='y = '+t;
+  if(p[0]!==0)s+=(p[0]<0?' '+MINUS+' ':' + ')+fmtF([Math.abs(p[0]),p[1]]);
+  return s;
+}
+function eqSwapStr(m,p){
+  if(p[0]===0)return eqStr(m,p);
+  return 'y = '+fmtF(p)+(m[0]<0?' '+MINUS+' ':' + ')+termX([Math.abs(m[0]),m[1]]);
+}
+function cartStr(a,b,c){
+  let s='';
+  [[a,'x'],[b,'y'],[c,'']].forEach(function(t){
+    const k=t[0],v=t[1];
+    if(k===0)return;
+    const ab=Math.abs(k),co=(v&&ab===1)?'':String(ab);
+    if(!s)s=(k<0?MINUS:'')+co+v;else s+=(k<0?' '+MINUS+' ':' + ')+co+v;
+  });
+  return s+' = 0';
+}
+function ptStr(x,y){return '('+fmtInt(x)+' ; '+fmtInt(y)+')';}
+
+/* Calculs sur les droites */
+function lineY(m,p,x){return fadd(fmul(m,fi(x)),p);}
+function onLine(m,p,x,y){return lineY(m,p,x)[0]===y*lineY(m,p,x)[1];}
+function slopeOf(xA,yA,xB,yB){return F(yB-yA,xB-xA);}
+function interceptOf(m,xA,yA){return fsub(fi(yA),fmul(m,fi(xA)));}
+function sameLine(u,v){return cr(u[0],u[1],v[0],v[1])===0&&cr(u[0],u[2],v[0],v[2])===0&&cr(u[1],u[2],v[1],v[2])===0;}
+function uniqLines(ref,lines){
+  const out=[];
+  lines.forEach(function(l){
+    if(sameLine(l,ref))return;
+    if(out.some(function(o){return sameLine(o,l);}))return;
+    out.push(l);
+  });
+  return out;
+}
+
+/* Équation cartésienne « propre » : coefficients premiers entre eux, premier coefficient non nul positif. */
+function normLine(l){
+  const g=gcd(gcd(l[0],l[1]),l[2])||1;
+  let r=[l[0]/g,l[1]/g,l[2]/g];
+  const f=r[0]!==0?r[0]:r[1];
+  if(f<0)r=[-r[0],-r[1],-r[2]];
+  return r;
+}
+
+const LEVELS={
+  facile:{label:'Facile',desc:'Rappels de Seconde : équation réduite, coefficients entiers, petits nombres.',mult:0.8},
+  moyen:{label:'Moyen',desc:'Niveau Première : équation cartésienne, vecteurs directeur et normal, perpendiculaires, droites verticales et horizontales.',mult:1},
+  difficile:{label:'Difficile',desc:'Fractions et calculs plus longs, médiatrices, parallèles et perpendiculaires en forme cartésienne.',mult:1.3}
+};
+Object.keys(LEVELS).forEach(function(k){LEVELS[k].key=k;});
+
+function randSlope(L){
+  if(L.key==='facile')return fi(pick([1,-1,2,-2,3,-3]));
+  if(L.key==='moyen')return pick([fi(1),fi(-1),fi(2),fi(-2),fi(3),fi(-3),fi(4),fi(-4),F(1,2),F(-1,2),F(3,2),F(-3,2)]);
+  return pick([fi(2),fi(-2),fi(3),fi(-3),F(1,2),F(-1,2),F(3,2),F(-3,2),F(2,3),F(-2,3),F(1,3),F(-1,3),F(5,2),F(-5,2),F(3,4),F(-3,4)]);
+}
+
+/* Construit 4 propositions : la bonne, puis 3 erreurs plausibles (tirées au hasard parmi cands, complétées par fill). */
+function mkOpts(correct,cands,fill){
+  const opts=[correct];
+  const pool=shuffle(cands.filter(function(s){return typeof s==='string';}));
+  for(let i=0;i<pool.length&&opts.length<4;i++){if(opts.indexOf(pool[i])<0)opts.push(pool[i]);}
+  for(let t=0;t<300&&opts.length<4;t++){const s=fill();if(typeof s==='string'&&opts.indexOf(s)<0)opts.push(s);}
+  shuffle(opts);
+  return {opts:opts,correct:opts.indexOf(correct)};
+}
+
+/* Dessin d'une droite dans un repère (fenêtre de −6 à 6). */
+function graphSvg(q){
+  const S=24,O=144,W=288;
+  const X=function(x){return O+x*S;},Y=function(y){return O-y*S;};
+  const mv=fnum(q.sl),pv=fnum(q.ic);
+  let g='';
+  for(let i=-6;i<=6;i++){
+    g+='<line class="gl" x1="'+X(i)+'" y1="'+Y(-6)+'" x2="'+X(i)+'" y2="'+Y(6)+'"/>';
+    g+='<line class="gl" x1="'+X(-6)+'" y1="'+Y(i)+'" x2="'+X(6)+'" y2="'+Y(i)+'"/>';
+  }
+  g+='<line class="ga" x1="'+X(-6)+'" y1="'+Y(0)+'" x2="'+X(6)+'" y2="'+Y(0)+'"/>';
+  g+='<line class="ga" x1="'+X(0)+'" y1="'+Y(-6)+'" x2="'+X(0)+'" y2="'+Y(6)+'"/>';
+  for(let i=-5;i<=5;i++){
+    if(i===0)continue;
+    g+='<text x="'+X(i)+'" y="'+(Y(0)+12)+'" text-anchor="middle">'+fmtInt(i)+'</text>';
+    g+='<text x="'+(X(0)-5)+'" y="'+(Y(i)+3.5)+'" text-anchor="end">'+fmtInt(i)+'</text>';
+  }
+  g+='<text x="'+(X(0)-5)+'" y="'+(Y(0)+12)+'" text-anchor="end">0</text>';
+  const xl=(-6-pv)/mv,xr=(6-pv)/mv;
+  const lo=Math.max(-6,Math.min(xl,xr)),hi=Math.min(6,Math.max(xl,xr));
+  g+='<line class="gd" x1="'+X(lo).toFixed(2)+'" y1="'+Y(mv*lo+pv).toFixed(2)+'" x2="'+X(hi).toFixed(2)+'" y2="'+Y(mv*hi+pv).toFixed(2)+'"/>';
+  q.pts.forEach(function(t){g+='<circle class="gp" cx="'+X(t[0])+'" cy="'+Y(t[1])+'" r="4.5"/>';});
+  const alt='Repère orthonormé avec une droite d passant par les points '+q.pts.map(function(t){return ptStr(t[0],t[1]);}).join(' et ')+'.';
+  return '<svg class="graph" viewBox="0 0 '+W+' '+W+'" role="img" aria-label="'+alt+'">'+g+'</svg>';
+}
+
+const QCM={
+  choices:function(q){return q.opts;},
+  solve:function(q){return {choice:q.correct};},
+  check:function(q,ans){return ans.choice===q.correct;},
+  answer:function(q){return q.opts[q.correct];}
+};
+function mode(def){return Object.assign({},QCM,def);}
+
+const MODE_KEYS=['read','point','slope','pm','eq2pts','graph','para','vect','cons','inter'];
+const MODES={
+
+  /* ---------- Lire m et p ---------- */
+  read:mode({
+    label:'Lire m et p',desc:'Repérer le coefficient directeur et l’ordonnée à l’origine, même quand l’équation n’est pas réduite.',target:20,
+    gen(L){
+      const lv=L.key,r=Math.random();
+      let form,sl,ic,a=0,b=0,c=0;
+      if(lv==='facile')form='red';
+      else if(lv==='moyen')form=r<0.35?'red':(r<0.55?'swap':'cart');
+      else form=r<0.65?'cart':(r<0.8?'swap':'red');
+      if(form==='cart'){
+        a=rnz(6);b=rnz(4);c=rnd(-8,8);
+        sl=F(-a,b);ic=F(-c,b);
+      }else{sl=randSlope(L);ic=fi(rnd(-6,6));}
+      const ask=lv==='facile'?pick(['m','p']):pick(['m','p','both']);
+      const cm=fmtF(sl),cp=fmtF(ic),nm=fmtF(fneg(sl)),np=fmtF(fneg(ic));
+      let correct,cands,fill;
+      if(ask==='m'){
+        correct=cm;cands=[nm,cp,np,fmtF(finv(sl))];
+        if(form==='cart'){cands.push(fmtF(F(a,b)),fmtF(F(-b,a)));}
+        fill=function(){return fmtF(fadd(sl,fi(pick([-2,-1,1,2]))));};
+      }else if(ask==='p'){
+        correct=cp;cands=[np,cm,nm];
+        if(form==='cart'){cands.push(fmtF(F(c,b)),fmtF(F(-c,a)));}
+        fill=function(){return fmtF(fadd(ic,fi(pick([-3,-2,-1,1,2,3]))));};
+      }else{
+        correct='m = '+cm+' ; p = '+cp;
+        cands=['m = '+cp+' ; p = '+cm,'m = '+nm+' ; p = '+cp,'m = '+cm+' ; p = '+np,'m = '+nm+' ; p = '+np];
+        fill=function(){return 'm = '+cm+' ; p = '+fmtF(fadd(ic,fi(pick([-2,-1,1,2]))));};
+      }
+      const o=mkOpts(correct,cands,fill);
+      return {m:'read',form:form,a:a,b:b,c:c,sl:sl,ic:ic,ask:ask,opts:o.opts,correct:o.correct};
+    },
+    prompt(q){
+      const eq=q.form==='cart'?cartStr(q.a,q.b,q.c):(q.form==='swap'?eqSwapStr(q.sl,q.ic):eqStr(q.sl,q.ic));
+      const d='la droite d d’équation <span class="math">'+eq+'</span>';
+      if(q.ask==='m')return 'Quel est le coefficient directeur de '+d+' ?';
+      if(q.ask==='p')return 'Quelle est l’ordonnée à l’origine de '+d+' ?';
+      return 'Pour '+d+', quels sont le coefficient directeur m et l’ordonnée à l’origine p ?';
+    },
+    explain(q){
+      const m=q.sl,p=q.ic;
+      if(q.form==='cart'){
+        return 'On isole y dans <span class="math">'+cartStr(q.a,q.b,q.c)+'</span> : y = (−a/b)x − c/b.<br>'
+          +'m = −a/b = −'+par(q.a)+' / '+par(q.b)+' = <strong>'+fmtF(m)+'</strong>.<br>'
+          +'p = −c/b = −'+par(q.c)+' / '+par(q.b)+' = <strong>'+fmtF(p)+'</strong>.';
+      }
+      const intro=q.form==='swap'?'On remet l’équation dans l’ordre y = mx + p : <span class="math">'+eqStr(m,p)+'</span>.<br>':'L’équation est déjà de la forme y = mx + p.<br>';
+      return intro+'m est le nombre qui multiplie x : m = <strong>'+fmtF(m)+'</strong>.<br>p est le terme constant : p = <strong>'+fmtF(p)+'</strong>.';
+    }
+  }),
+
+  /* ---------- Point sur la droite ---------- */
+  point:mode({
+    label:'Point sur la droite',desc:'Tester si un point appartient à la droite : y = mx + p.',target:25,
+    gen(L){
+      const sl=randSlope(L),d=sl[1],ic=fi(rnd(-6,6));
+      const val=Math.random()<0.35;
+      const kmax=Math.floor(5/d);
+      let k;do{k=rnd(-kmax,kmax);}while(val&&k===0);
+      const x0=d*k,y0=lineY(sl,ic,x0)[0];
+      let correct,cands,fill;
+      if(val){
+        const p=ic[0];
+        correct=fmtInt(y0);
+        cands=[fmtInt(y0-2*p),fmtInt(-y0),fmtInt(2*p-y0),fmtInt(x0+p),fmtInt(y0+1),fmtInt(y0-1)];
+        fill=function(){return fmtInt(y0+pick([-3,-2,2,3,4]));};
+      }else{
+        const on=function(x,y){return onLine(sl,ic,x,y);};
+        correct=ptStr(x0,y0);
+        cands=[[y0,x0],[x0,-y0],[-x0,y0],[x0,y0+1],[x0,y0-1],[x0+1,y0],[x0,y0-2*ic[0]]]
+          .filter(function(t){return !on(t[0],t[1]);})
+          .map(function(t){return ptStr(t[0],t[1]);});
+        fill=function(){const x=rnd(-6,6),y=rnd(-6,6);return on(x,y)?null:ptStr(x,y);};
+      }
+      const o=mkOpts(correct,cands,fill);
+      return {m:'point',val:val,sl:sl,ic:ic,x0:x0,y0:y0,opts:o.opts,correct:o.correct};
+    },
+    prompt(q){
+      const eq='<span class="math">'+eqStr(q.sl,q.ic)+'</span>';
+      if(q.val)return 'Le point A('+fmtInt(q.x0)+' ; a) appartient à la droite d : '+eq+'. Que vaut a ?';
+      return 'Lequel de ces points appartient à la droite d : '+eq+' ?';
+    },
+    explain(q){
+      const calc=fmtF(q.sl)+' × '+par(q.x0)+' + '+par(q.ic)+' = <strong>'+fmtInt(q.y0)+'</strong>';
+      if(q.val)return 'A est sur d si et seulement si yA = m × xA + p.<br>a = '+calc+'.';
+      return 'M(x ; y) est sur d si et seulement si y = m × x + p, avec m = '+fmtF(q.sl)+' et p = '+fmtF(q.ic)+'.<br>Pour '+ptStr(q.x0,q.y0)+' : '+calc+', c’est bien l’ordonnée du point. Fais le même test sur chaque proposition : l’égalité doit être vraie.';
+    }
+  }),
+
+  /* ---------- Coefficient directeur par deux points ---------- */
+  slope:mode({
+    label:'Coefficient directeur',desc:'Calculer m = Δy / Δx à partir de deux points.',target:30,
+    gen(L){
+      const lv=L.key;
+      let xA=1,yA=2,xB=3,yB=6;
+      for(let t=0;t<300;t++){
+        if(lv==='difficile'){
+          xA=rnd(-7,7);xB=rnd(-7,7);yA=rnd(-8,8);yB=rnd(-8,8);
+          if(xA===xB)continue;
+          break;
+        }
+        const sl=randSlope(L),d=sl[1],kk=pick([1,2,3,-1,-2,-3]);
+        xA=rnd(-5,5);xB=xA+d*kk;yA=rnd(-6,6);
+        yB=(lv!=='facile'&&Math.random()<0.12)?yA:yA+sl[0]*kk;
+        if(Math.abs(xB)>8||Math.abs(yB)>10)continue;
+        break;
+      }
+      const dy=yB-yA,dx=xB-xA,m=F(dy,dx);
+      const cands=[fmtF(F(-dy,dx))];
+      if(dy!==0){cands.push(fmtF(F(dx,dy)),fmtF(F(-dx,dy)));}
+      if(xA+xB!==0)cands.push(fmtF(F(dy,xA+xB)));
+      cands.push(fmtF(F(yA+yB,dx)));
+      const fill=function(){return fmtF(fadd(m,F(pick([-3,-2,-1,1,2,3]),pick([1,2]))));};
+      const o=mkOpts(fmtF(m),cands,fill);
+      return {m:'slope',xA:xA,yA:yA,xB:xB,yB:yB,opts:o.opts,correct:o.correct};
+    },
+    prompt:q=>'Soit A'+ptStr(q.xA,q.yA)+' et B'+ptStr(q.xB,q.yB)+'. Quel est le coefficient directeur de la droite (AB) ?',
+    explain(q){
+      const dy=q.yB-q.yA,dx=q.xB-q.xA;
+      return 'm = (yB − yA) / (xB − xA) = ('+par(q.yB)+' − '+par(q.yA)+') / ('+par(q.xB)+' − '+par(q.xA)+') = '+fmtInt(dy)+' / '+fmtInt(dx)+' = <strong>'+fmtF(F(dy,dx))+'</strong>.<br>Attention : on divise la variation des ordonnées par celle des abscisses, dans le même ordre au numérateur et au dénominateur.';
+    }
+  }),
+
+  /* ---------- Équation avec un point et m ---------- */
+  pm:mode({
+    label:'Équation avec un point et m',desc:'Trouver p quand on connaît le coefficient directeur et un point.',target:40,
+    gen(L){
+      const lv=L.key;
+      const sl=randSlope(L),d=sl[1];
+      const xA=lv==='difficile'?rnd(-5,5):d*rnd(-Math.floor(4/d),Math.floor(4/d));
+      const yA=rnd(-6,6);
+      const ic=interceptOf(sl,xA,yA);
+      const isPar=lv!=='facile'&&Math.random()<0.35;
+      const ref=isPar?fi(rnd(-6,6)):null;
+      const pPlus=fadd(fi(yA),fmul(sl,fi(xA)));
+      const cands=[eqStr(sl,pPlus),eqStr(sl,fi(yA)),eqStr(sl,fneg(ic)),eqStr(fneg(sl),ic),eqStr(finv(sl),ic),eqStr(fneg(sl),pPlus)];
+      const fill=function(){return eqStr(sl,fadd(ic,fi(pick([-3,-2,-1,1,2,3]))));};
+      const o=mkOpts(eqStr(sl,ic),cands,fill);
+      return {m:'pm',sl:sl,xA:xA,yA:yA,ic:ic,ref:ref,opts:o.opts,correct:o.correct};
+    },
+    prompt(q){
+      const A='A'+ptStr(q.xA,q.yA);
+      if(q.ref)return 'Quelle est l’équation réduite de la droite passant par '+A+' et parallèle à la droite d : <span class="math">'+eqStr(q.sl,q.ref)+'</span> ?';
+      return 'Quelle est l’équation réduite de la droite de coefficient directeur '+fmtF(q.sl)+' passant par '+A+' ?';
+    },
+    explain(q){
+      const intro=q.ref?'Deux droites parallèles ont le même coefficient directeur : m = '+fmtF(q.sl)+'.<br>':'';
+      return intro+'La droite a pour équation y = mx + p avec m = '+fmtF(q.sl)+'. Elle passe par A, donc yA = m × xA + p, soit p = yA − m × xA.<br>'
+        +'p = '+par(q.yA)+' − '+par(q.sl)+' × '+par(q.xA)+' = <strong>'+fmtF(q.ic)+'</strong>.<br>'
+        +'Équation : <strong>'+eqStr(q.sl,q.ic)+'</strong>.';
+    }
+  }),
+
+  /* ---------- Droite passant par deux points ---------- */
+  eq2pts:mode({
+    label:'Droite passant par deux points',desc:'Équation réduite de (AB), y compris les droites verticales et horizontales.',target:50,
+    gen(L){
+      const lv=L.key;
+      const spP=lv==='facile'?0:(lv==='moyen'?0.18:0.22);
+      if(Math.random()<spP){
+        const vertical=Math.random()<0.5;
+        const k=rnz(6);
+        let u,v;do{u=rnd(-6,6);v=rnd(-6,6);}while(u===v);
+        let correct,cands,pts;
+        if(vertical){
+          correct='x = '+fmtInt(k);
+          cands=['y = '+fmtInt(k),'x = '+fmtInt(-k),'y = '+fmtInt(-k),'x = '+fmtInt(u)];
+          pts=[k,u,k,v];
+        }else{
+          correct='y = '+fmtInt(k);
+          cands=['x = '+fmtInt(k),'y = '+fmtInt(-k),'x = '+fmtInt(-k),'y = '+fmtInt(u)];
+          pts=[u,k,v,k];
+        }
+        const o=mkOpts(correct,cands,function(){return pick(['x','y'])+' = '+fmtInt(rnz(6));});
+        return {m:'eq2pts',sp:vertical?'v':'h',xA:pts[0],yA:pts[1],xB:pts[2],yB:pts[3],opts:o.opts,correct:o.correct};
+      }
+      let xA=1,yA=1,xB=2,yB=3;
+      for(let t=0;t<300;t++){
+        if(lv==='difficile'){
+          xA=rnd(-5,5);xB=rnd(-5,5);yA=rnd(-6,6);yB=rnd(-6,6);
+          if(xA===xB||yA===yB)continue;
+          break;
+        }
+        const sl=randSlope(L),d=sl[1],ic0=fi(rnd(-5,5));
+        xA=d*rnd(-2,2);xB=xA+d*pick([1,2,-1,-2]);
+        yA=lineY(sl,ic0,xA)[0];yB=lineY(sl,ic0,xB)[0];
+        if(Math.abs(yA)>9||Math.abs(yB)>9)continue;
+        break;
+      }
+      const m=slopeOf(xA,yA,xB,yB),p=interceptOf(m,xA,yA);
+      const cands=[eqStr(m,fneg(p)),eqStr(fneg(m),p),eqStr(finv(m),p),eqStr(m,fadd(fi(yA),fmul(m,fi(xA)))),eqStr(fneg(m),fneg(p)),eqStr(m,fi(yB))];
+      const fill=function(){return eqStr(m,fadd(p,fi(pick([-3,-2,-1,1,2,3]))));};
+      const o=mkOpts(eqStr(m,p),cands,fill);
+      return {m:'eq2pts',xA:xA,yA:yA,xB:xB,yB:yB,opts:o.opts,correct:o.correct};
+    },
+    prompt(q){
+      const pts='A'+ptStr(q.xA,q.yA)+' et B'+ptStr(q.xB,q.yB);
+      if(q.sp)return 'Quelle est l’équation de la droite (AB) avec '+pts+' ?';
+      return 'Quelle est l’équation réduite de la droite (AB) avec '+pts+' ?';
+    },
+    explain(q){
+      if(q.sp==='v')return 'A et B ont la même abscisse '+fmtInt(q.xA)+' : la droite (AB) est verticale. Son équation est <strong>x = '+fmtInt(q.xA)+'</strong>. Elle n’a pas de coefficient directeur ni d’équation réduite.';
+      if(q.sp==='h')return 'A et B ont la même ordonnée '+fmtInt(q.yA)+' : la droite (AB) est horizontale, de coefficient directeur 0. Son équation est <strong>y = '+fmtInt(q.yA)+'</strong>.';
+      const m=slopeOf(q.xA,q.yA,q.xB,q.yB),p=interceptOf(m,q.xA,q.yA);
+      return 'Coefficient directeur : m = (yB − yA) / (xB − xA) = ('+par(q.yB)+' − '+par(q.yA)+') / ('+par(q.xB)+' − '+par(q.xA)+') = <strong>'+fmtF(m)+'</strong>.<br>'
+        +'Ordonnée à l’origine : p = yA − m × xA = '+par(q.yA)+' − '+par(m)+' × '+par(q.xA)+' = <strong>'+fmtF(p)+'</strong>.<br>'
+        +'Équation : <strong>'+eqStr(m,p)+'</strong>.';
+    }
+  }),
+
+  /* ---------- Lecture graphique ---------- */
+  graph:mode({
+    label:'Lecture graphique',desc:'Retrouver l’équation d’une droite tracée dans un repère.',target:35,
+    gen(L){
+      let sl=fi(1),ic=fi(0),pts=[[0,0],[1,1]];
+      for(let t=0;t<300;t++){
+        sl=randSlope(L);
+        const p=rnd(-4,4),s=pick([1,-1]),kk=pick([1,2]);
+        const x2=s*sl[1]*kk,y2=p+s*sl[0]*kk;
+        if(Math.abs(y2)>6||Math.abs(x2)>6)continue;
+        ic=fi(p);pts=[[0,p],[x2,y2]];
+        break;
+      }
+      const cands=[eqStr(fneg(sl),ic),eqStr(sl,fneg(ic)),eqStr(finv(sl),ic),eqStr(fneg(sl),fneg(ic))];
+      const fill=function(){return eqStr(sl,fadd(ic,fi(pick([-2,-1,1,2]))));};
+      const o=mkOpts(eqStr(sl,ic),cands,fill);
+      return {m:'graph',sl:sl,ic:ic,pts:pts,opts:o.opts,correct:o.correct};
+    },
+    prompt:q=>'Quelle est l’équation réduite de la droite d représentée ci-dessous ?'+graphSvg(q),
+    explain(q){
+      const p=q.pts[0][1],x2=q.pts[1][0],y2=q.pts[1][1];
+      return 'La droite coupe l’axe des ordonnées en (0 ; '+fmtInt(p)+') : p = <strong>'+fmtInt(p)+'</strong>.<br>'
+        +'Elle passe aussi par '+ptStr(x2,y2)+'. De (0 ; '+fmtInt(p)+') à ce point, x varie de '+fmtInt(x2)+' et y varie de '+fmtInt(y2-p)+'.<br>'
+        +'m = Δy / Δx = '+par(y2-p)+' / '+par(x2)+' = <strong>'+fmtF(q.sl)+'</strong>.<br>'
+        +'Équation : <strong>'+eqStr(q.sl,q.ic)+'</strong>.';
+    }
+  }),
+
+  /* ---------- Parallèles et perpendiculaires ---------- */
+  para:mode({
+    label:'Parallèles et perpendiculaires',desc:'Comparer les directions de deux droites.',target:35,
+    gen(L){
+      const lv=L.key,r=Math.random();
+      let kind;
+      if(lv==='facile')kind='par';
+      else if(lv==='moyen')kind=r<0.3?'par':(r<0.5?'perp':(r<0.78?'parcart':'perpcart'));
+      else kind=r<0.2?'par':(r<0.4?'perp':(r<0.7?'parcart':'perpcart'));
+      if(kind==='par'||kind==='perp'){
+        let sl;do{sl=randSlope(L);}while(kind==='perp'&&Math.abs(sl[0])===sl[1]);
+        const ic=fi(rnd(-6,6));
+        const sc=kind==='par'?sl:fneg(finv(sl));
+        let p2;do{p2=rnd(-6,6);}while(kind==='par'&&p2===ic[0]);
+        const raw=[fneg(sl),finv(sl),fneg(finv(sl)),fadd(sl,fi(1)),fadd(sl,fi(-1)),fmul(sl,fi(2))];
+        const slopes=[];
+        raw.forEach(function(s){
+          if(s[0]!==0&&!feq(s,sc)&&!slopes.some(function(t){return feq(t,s);}))slopes.push(s);
+        });
+        const cands=slopes.map(function(s){return eqStr(s,fi(rnd(-6,6)));});
+        const fill=function(){return eqStr(fadd(sc,fi(pick([-3,-2,2,3]))),fi(rnd(-6,6)));};
+        const o=mkOpts(eqStr(sc,fi(p2)),cands,fill);
+        return {m:'para',kind:kind,sl:sl,ic:ic,sc:sc,opts:o.opts,correct:o.correct};
+      }
+      let a,b;do{a=rnz(5);b=rnz(5);}while(Math.abs(a)===Math.abs(b));
+      const c=rnd(-6,6),perp=kind==='perpcart';
+      const k=perp?pick([1,2,-1,-2]):pick([2,3,-1,-2]);
+      let cor;
+      if(perp){cor=[-k*b,k*a,rnd(-9,9)];}
+      else{let c2;do{c2=rnd(-9,9);}while(c2===k*c);cor=[k*a,k*b,c2];}
+      const valid=function(a2,b2){return perp?(a*a2+b*b2!==0):(cr(a,b,a2,b2)!==0);};
+      const base=perp?[[k*a,k*b],[k*b,k*a],[k*a,-k*b],[b,a]]:[[b,a],[a,-b],[-b,a],[-a,b],[k*b,k*a],[-k*b,k*a]];
+      const cands=base.filter(function(t){return valid(t[0],t[1]);}).map(function(t){return cartStr(t[0],t[1],rnd(-9,9));});
+      const fill=function(){const a2=rnz(6),b2=rnz(6);return valid(a2,b2)?cartStr(a2,b2,rnd(-9,9)):null;};
+      const o=mkOpts(cartStr(cor[0],cor[1],cor[2]),cands,fill);
+      return {m:'para',kind:kind,a:a,b:b,c:c,k:k,cor:cor,opts:o.opts,correct:o.correct};
+    },
+    prompt(q){
+      const perp=q.kind==='perp'||q.kind==='perpcart';
+      const eq=(q.kind==='par'||q.kind==='perp')?eqStr(q.sl,q.ic):cartStr(q.a,q.b,q.c);
+      return 'Soit la droite d : <span class="math">'+eq+'</span>. Laquelle de ces droites est <strong>'+(perp?'perpendiculaire':'parallèle')+'</strong> à d'+(perp?' (repère orthonormé)':'')+' ?';
+    },
+    explain(q){
+      if(q.kind==='par')return 'Deux droites sont parallèles si et seulement si elles ont le même coefficient directeur. Ici m = '+fmtF(q.sl)+' : il faut une droite dont le nombre devant x vaut '+fmtF(q.sl)+'.<br><strong>'+q.opts[q.correct]+'</strong>';
+      if(q.kind==='perp')return 'Deux droites sont perpendiculaires (repère orthonormé) si et seulement si m × m′ = −1, donc m′ = −1/m.<br>m′ = −1 / '+par(q.sl)+' = <strong>'+fmtF(q.sc)+'</strong>.<br><strong>'+q.opts[q.correct]+'</strong>';
+      const o=q.cor;
+      if(q.kind==='parcart')return 'Deux droites ax + by + c = 0 et a′x + b′y + c′ = 0 sont parallèles si leurs coefficients (a ; b) et (a′ ; b′) sont proportionnels, c’est-à-dire ab′ − a′b = 0.<br>Ici (a ; b) = ('+fmtInt(q.a)+' ; '+fmtInt(q.b)+') et (a′ ; b′) = ('+fmtInt(o[0])+' ; '+fmtInt(o[1])+') = '+fmtInt(q.k)+' × ('+fmtInt(q.a)+' ; '+fmtInt(q.b)+').<br><strong>'+q.opts[q.correct]+'</strong>';
+      return 'Deux droites sont perpendiculaires si leurs vecteurs normaux (a ; b) et (a′ ; b′) sont orthogonaux, c’est-à-dire aa′ + bb′ = 0.<br>Ici : '+par(q.a)+' × '+par(o[0])+' + '+par(q.b)+' × '+par(o[1])+' = 0.<br><strong>'+q.opts[q.correct]+'</strong>';
+    }
+  }),
+
+  /* ---------- Vecteurs et équation cartésienne ---------- */
+  vect:mode({
+    label:'Vecteurs et équation cartésienne',desc:'Vecteur directeur, vecteur normal, passage de y = mx + p à ax + by + c = 0.',target:45,
+    gen(L){
+      const lv=L.key,R=lv==='facile'?3:(lv==='moyen'?5:7);
+      const r=Math.random();
+      const kind=r<0.2?'dir':(r<0.4?'norm':(r<0.6?'from':(r<0.8?'conv':'conv2')));
+      const vec=function(v){return ptStr(v[0],v[1]);};
+      const fillVec=function(ref){return function(){const v=[rnz(5),rnz(5)];return cr(ref[0],ref[1],v[0],v[1])===0?null:vec(v);};};
+      if(kind==='dir'||kind==='norm'){
+        const a=rnz(R),b=rnz(R),c=rnd(-8,8),s=pick([1,-1]);
+        const cor=kind==='dir'?[-s*b,s*a]:[s*a,s*b];
+        const base=kind==='dir'?[[b,a],[a,b],[a,-b],[-a,b],[-b,-a]]:[[-b,a],[b,a],[a,-b],[b,-a],[-a,b]];
+        const cands=base.filter(function(v){return cr(cor[0],cor[1],v[0],v[1])!==0;}).map(vec);
+        const o=mkOpts(vec(cor),cands,fillVec(cor));
+        return {m:'vect',kind:kind,a:a,b:b,c:c,opts:o.opts,correct:o.correct};
+      }
+      if(kind==='from'){
+        const u1=rnz(4),u2=rnz(4),xA=rnd(-4,4),yA=rnd(-4,4);
+        const cl=[u2,-u1,u1*yA-u2*xA];
+        const raw=[[u2,-u1,-cl[2]],[u1,u2,-(u1*xA+u2*yA)],[u2,u1,-(u2*xA+u1*yA)],[u1,-u2,-(u1*xA-u2*yA)],[-u2,-u1,u2*xA+u1*yA]];
+        const cands=uniqLines(cl,raw).map(function(l){return cartStr(l[0],l[1],l[2]);});
+        const fill=function(){const l=[rnz(5),rnz(5),rnd(-9,9)];return sameLine(l,cl)?null:cartStr(l[0],l[1],l[2]);};
+        const o=mkOpts(cartStr(cl[0],cl[1],cl[2]),cands,fill);
+        return {m:'vect',kind:kind,u1:u1,u2:u2,xA:xA,yA:yA,cl:cl,opts:o.opts,correct:o.correct};
+      }
+      if(kind==='conv'){
+        const a=rnz(R),b=rnz(Math.min(R,5)),c=rnd(-8,8);
+        const m=F(-a,b),p=F(-c,b);
+        const cands=[eqStr(F(a,b),F(c,b)),eqStr(m,F(c,b)),eqStr(F(a,b),p),eqStr(F(-b,a),F(-c,a))];
+        const fill=function(){return eqStr(m,fadd(p,fi(pick([-2,-1,1,2]))));};
+        const o=mkOpts(eqStr(m,p),cands,fill);
+        return {m:'vect',kind:kind,a:a,b:b,c:c,opts:o.opts,correct:o.correct};
+      }
+      const sl=lv==='difficile'?randSlope(L):fi(pick([1,-1,2,-2,3,-3,4,-4])),ic=fi(rnd(-6,6));
+      const Ld=lcm(sl[1],ic[1]);
+      let cl=[Ld*sl[0]/sl[1],-Ld,Ld*ic[0]/ic[1]];
+      if(cl[0]<0)cl=[-cl[0],-cl[1],-cl[2]];
+      const raw=[];
+      [[1,1,-1],[1,-1,1],[-1,1,1],[1,-1,-1],[-1,1,-1],[-1,-1,1]].forEach(function(sg){raw.push([cl[0]*sg[0],cl[1]*sg[1],cl[2]*sg[2]]);});
+      raw.push([cl[0],cl[1],0],[cl[0],0,cl[2]]);
+      const cands=uniqLines(cl,raw.filter(function(l){return l[1]!==0;})).map(function(l){return cartStr(l[0],l[1],l[2]);});
+      const fill=function(){const l=[cl[0]+pick([-2,-1,1,2]),cl[1],cl[2]];return sameLine(l,cl)||l[0]===0?null:cartStr(l[0],l[1],l[2]);};
+      const o=mkOpts(cartStr(cl[0],cl[1],cl[2]),cands,fill);
+      return {m:'vect',kind:kind,sl:sl,ic:ic,cl:cl,Ld:Ld,opts:o.opts,correct:o.correct};
+    },
+    prompt(q){
+      const eq=function(){return '<span class="math">'+cartStr(q.a,q.b,q.c)+'</span>';};
+      if(q.kind==='dir')return 'Quel est un vecteur directeur de la droite d : '+eq()+' ?';
+      if(q.kind==='norm')return 'Quel est un vecteur normal à la droite d : '+eq()+' ?';
+      if(q.kind==='from')return 'La droite d passe par A'+ptStr(q.xA,q.yA)+' et a pour vecteur directeur u'+ptStr(q.u1,q.u2)+'. Quelle est une équation cartésienne de d ?';
+      if(q.kind==='conv')return 'Quelle est l’équation réduite de la droite d : '+eq()+' ?';
+      return 'Quelle est une équation cartésienne de la droite d : <span class="math">'+eqStr(q.sl,q.ic)+'</span> ?';
+    },
+    explain(q){
+      if(q.kind==='dir')return 'Pour une droite d’équation ax + by + c = 0, un vecteur directeur est u(−b ; a).<br>Ici a = '+fmtInt(q.a)+' et b = '+fmtInt(q.b)+' : u('+fmtInt(-q.b)+' ; '+fmtInt(q.a)+'), ou tout vecteur colinéaire, comme l’opposé.<br>Ne confonds pas avec le vecteur normal n(a ; b).';
+      if(q.kind==='norm')return 'Pour une droite d’équation ax + by + c = 0, un vecteur normal (orthogonal à la droite) est n(a ; b) : on lit directement les coefficients de x et de y.<br>Ici n('+fmtInt(q.a)+' ; '+fmtInt(q.b)+'), ou tout vecteur colinéaire.<br>Ne confonds pas avec le vecteur directeur u(−b ; a).';
+      if(q.kind==='from'){
+        const a=q.cl[0],b=q.cl[1];
+        return 'Si u('+fmtInt(q.u1)+' ; '+fmtInt(q.u2)+') dirige la droite, alors u(−b ; a) donne b = '+fmtInt(-q.u1)+' et a = '+fmtInt(q.u2)+'.<br>'
+          +'L’équation est '+fmtInt(a)+'x + '+par(b)+'y + c = 0. A est sur d : c = −(a × xA + b × yA) = −('+par(a)+' × '+par(q.xA)+' + '+par(b)+' × '+par(q.yA)+') = <strong>'+fmtInt(q.cl[2])+'</strong>.<br>'
+          +'Équation : <strong>'+cartStr(q.cl[0],q.cl[1],q.cl[2])+'</strong>.';
+      }
+      if(q.kind==='conv'){
+        const m=F(-q.a,q.b),p=F(-q.c,q.b);
+        return 'On isole y : ax + by + c = 0 équivaut à y = (−a/b)x − c/b.<br>m = −a/b = −'+par(q.a)+' / '+par(q.b)+' = <strong>'+fmtF(m)+'</strong> ; p = −c/b = −'+par(q.c)+' / '+par(q.b)+' = <strong>'+fmtF(p)+'</strong>.<br>Équation : <strong>'+eqStr(m,p)+'</strong>.';
+      }
+      return 'On passe tout dans un seul membre'+(q.Ld>1?' (en multipliant d’abord par '+q.Ld+' pour supprimer les dénominateurs)':'')+' : y = '+eqStr(q.sl,q.ic).slice(4)+' équivaut à <strong>'+cartStr(q.cl[0],q.cl[1],q.cl[2])+'</strong>.<br>Toute équation proportionnelle décrit la même droite ; une seule est proposée ici.';
+    }
+  }),
+
+  /* ---------- Construire une équation cartésienne ---------- */
+  cons:mode({
+    label:'Construire une équation cartésienne',desc:'À partir d’un vecteur normal, de deux points, d’une médiatrice, d’une parallèle ou d’une perpendiculaire.',target:55,
+    gen(L){
+      const lv=L.key,R=lv==='facile'?3:(lv==='moyen'?4:6);
+      const kind=pick(['normal','ab','med','parA','perpA']);
+      let A=[rnd(-4,4),rnd(-4,4)],raw,wrong,data={};
+      if(kind==='normal'){
+        const a=rnz(R),b=rnz(R);
+        raw=[a,b,-(a*A[0]+b*A[1])];
+        wrong=[[a,b,a*A[0]+b*A[1]],[b,-a,-(b*A[0]-a*A[1])],[a,b,-(a*A[1]+b*A[0])],[-a,b,-(-a*A[0]+b*A[1])]];
+        data={a:a,b:b};
+      }else if(kind==='ab'){
+        let B;do{B=[rnd(-4,4),rnd(-4,4)];}while(B[0]===A[0]&&B[1]===A[1]);
+        const dx=B[0]-A[0],dy=B[1]-A[1];
+        raw=[dy,-dx,-(dy*A[0]-dx*A[1])];
+        wrong=[[dx,dy,-(dx*A[0]+dy*A[1])],[dy,-dx,dy*A[0]-dx*A[1]],[dy,dx,-(dy*A[0]+dx*A[1])],[dx,-dy,-(dx*A[0]-dy*A[1])]];
+        data={B:B};
+      }else if(kind==='med'){
+        const I=[rnd(-3,3),rnd(-3,3)];
+        let h;do{h=[rnd(-3,3),rnd(-3,3)];}while(h[0]===0&&h[1]===0);
+        A=[I[0]-h[0],I[1]-h[1]];
+        const B=[I[0]+h[0],I[1]+h[1]],dx=B[0]-A[0],dy=B[1]-A[1];
+        raw=[dx,dy,-(dx*I[0]+dy*I[1])];
+        wrong=[[dy,-dx,-(dy*I[0]-dx*I[1])],[dy,-dx,-(dy*A[0]-dx*A[1])],[dx,dy,-(dx*A[0]+dy*A[1])],[dx,dy,dx*I[0]+dy*I[1]]];
+        data={B:B,I:I};
+      }else{
+        let a,b;do{a=rnz(R);b=rnz(R);}while(Math.abs(a)===Math.abs(b));
+        const c=rnd(-8,8);
+        if(kind==='parA'){
+          raw=[a,b,-(a*A[0]+b*A[1])];
+          wrong=[[-b,a,-(-b*A[0]+a*A[1])],[a,b,c],[a,b,a*A[0]+b*A[1]],[b,a,-(b*A[0]+a*A[1])]];
+        }else{
+          raw=[-b,a,b*A[0]-a*A[1]];
+          wrong=[[a,b,-(a*A[0]+b*A[1])],[b,a,-(b*A[0]+a*A[1])],[-b,a,-(b*A[0]-a*A[1])],[a,-b,-(a*A[0]-b*A[1])]];
+        }
+        data={a:a,b:b,c:c};
+      }
+      const cl=normLine(raw);
+      const cands=uniqLines(cl,wrong.map(normLine)).map(function(l){return cartStr(l[0],l[1],l[2]);});
+      const fill=function(){const l=normLine([rnz(5),rnz(5),rnd(-12,12)]);return sameLine(l,cl)?null:cartStr(l[0],l[1],l[2]);};
+      const o=mkOpts(cartStr(cl[0],cl[1],cl[2]),cands,fill);
+      return Object.assign({m:'cons',kind:kind,A:A,raw:raw,opts:o.opts,correct:o.correct},data);
+    },
+    prompt(q){
+      const A='A'+ptStr(q.A[0],q.A[1]);
+      const d='<span class="math">'+cartStr(q.a,q.b,q.c)+'</span>';
+      if(q.kind==='normal')return 'La droite d passe par '+A+' et a pour vecteur normal n'+ptStr(q.a,q.b)+'. Quelle est une équation cartésienne de d ?';
+      if(q.kind==='ab')return 'Soit '+A+' et B'+ptStr(q.B[0],q.B[1])+'. Quelle est une équation cartésienne de la droite (AB) ?';
+      if(q.kind==='med')return 'Soit '+A+' et B'+ptStr(q.B[0],q.B[1])+'. Quelle est une équation cartésienne de la médiatrice de [AB] ?';
+      if(q.kind==='parA')return 'Quelle est une équation cartésienne de la droite parallèle à d : '+d+' passant par '+A+' ?';
+      return 'Quelle est une équation cartésienne de la droite perpendiculaire à d : '+d+' passant par '+A+' ?';
+    },
+    explain(q){
+      const r=q.raw,P=q.kind==='med'?q.I:q.A;
+      const cc='c = −(a × x + b × y) avec le point ('+fmtInt(P[0])+' ; '+fmtInt(P[1])+') : c = −('+par(r[0])+' × '+par(P[0])+' + '+par(r[1])+' × '+par(P[1])+') = <strong>'+fmtInt(r[2])+'</strong>.';
+      const tail='<br>Équation : <strong>'+q.opts[q.correct]+'</strong> (toute équation proportionnelle convient).';
+      if(q.kind==='normal')return 'M(x ; y) est sur d si et seulement si le vecteur AM est orthogonal à n, soit a(x − xA) + b(y − yA) = 0.<br>Avec n'+ptStr(q.a,q.b)+' : '+fmtInt(r[0])+'x + '+par(r[1])+'y + c = 0, où '+cc+tail;
+      if(q.kind==='ab'){
+        const dx=q.B[0]-q.A[0],dy=q.B[1]-q.A[1];
+        return 'Le vecteur AB('+fmtInt(dx)+' ; '+fmtInt(dy)+') dirige la droite. Pour ax + by + c = 0, un vecteur directeur est (−b ; a), donc a = '+fmtInt(dy)+' et b = '+fmtInt(-dx)+'.<br>A est sur la droite, donc '+cc+tail;
+      }
+      if(q.kind==='med')return 'La médiatrice de [AB] passe par le milieu I de [AB] et a pour vecteur normal AB.<br>I = '+ptStr(q.I[0],q.I[1])+' et AB('+fmtInt(q.B[0]-q.A[0])+' ; '+fmtInt(q.B[1]-q.A[1])+'), donc a = '+fmtInt(r[0])+' et b = '+fmtInt(r[1])+'.<br>I est sur la droite, donc '+cc+tail+'<br>Attention : l’équation de (AB) elle-même s’obtient avec AB comme vecteur directeur, pas comme vecteur normal.';
+      if(q.kind==='parA')return 'Deux droites parallèles ont des vecteurs normaux colinéaires : on garde (a ; b) = ('+fmtInt(q.a)+' ; '+fmtInt(q.b)+'). Il reste à trouver c pour que A soit sur la droite.<br>'+cc+tail;
+      return 'Une droite perpendiculaire à d a pour vecteur normal un vecteur directeur de d, c’est-à-dire u(−b ; a) = ('+fmtInt(-q.b)+' ; '+fmtInt(q.a)+').<br>Donc a′ = '+fmtInt(r[0])+' et b′ = '+fmtInt(r[1])+'. A est sur la droite, donc '+cc+tail;
+    }
+  }),
+
+  /* ---------- Intersection de deux droites ---------- */
+  inter:mode({
+    label:'Intersection de deux droites',desc:'Résoudre m₁x + p₁ = m₂x + p₂, puis calculer y.',target:60,
+    gen(L){
+      const lv=L.key;
+      const pool=lv==='facile'?[1,-1,2,-2,3,-3].map(fi):(lv==='moyen'?[1,-1,2,-2,3,-3,4,-4].map(fi):[fi(1),fi(-1),fi(2),fi(-2),fi(3),fi(-3),F(1,2),F(-1,2),F(3,2),F(-3,2),F(1,2),F(-1,2)]);
+      let m1=fi(1),m2=fi(-1),x0=0,y0=0,p1=fi(0),p2=fi(0);
+      for(let t=0;t<400;t++){
+        m1=pick(pool);m2=pick(pool);
+        if(feq(m1,m2))continue;
+        const den=lcm(m1[1],m2[1]);
+        x0=den*rnd(-Math.floor(4/den),Math.floor(4/den));y0=rnd(-6,6);
+        p1=fsub(fi(y0),fmul(m1,fi(x0)));p2=fsub(fi(y0),fmul(m2,fi(x0)));
+        if(p1[1]!==1||p2[1]!==1||Math.abs(p1[0])>12||Math.abs(p2[0])>12)continue;
+        break;
+      }
+      const cands=[[y0,x0],[-x0,y0],[x0,-y0],[x0+1,y0],[x0,y0+1],[-x0,lineY(m1,p1,-x0)[0]],[-x0,lineY(m2,p2,-x0)[0]]].map(function(t){return ptStr(t[0],t[1]);});
+      const fill=function(){return ptStr(x0+rnd(-3,3),y0+rnd(-3,3));};
+      const o=mkOpts(ptStr(x0,y0),cands,fill);
+      return {m:'inter',m1:m1,p1:p1,m2:m2,p2:p2,x0:x0,y0:y0,opts:o.opts,correct:o.correct};
+    },
+    prompt:q=>'Les droites d₁ : <span class="math">'+eqStr(q.m1,q.p1)+'</span> et d₂ : <span class="math">'+eqStr(q.m2,q.p2)+'</span> sont sécantes. Quelles sont les coordonnées de leur point d’intersection ?',
+    explain(q){
+      const num=fsub(q.p2,q.p1),den=fsub(q.m1,q.m2);
+      return 'Au point d’intersection, les deux ordonnées sont égales : m₁x + p₁ = m₂x + p₂, donc (m₁ − m₂)x = p₂ − p₁.<br>'
+        +'x = (p₂ − p₁) / (m₁ − m₂) = ('+par(q.p2)+' − '+par(q.p1)+') / ('+par(q.m1)+' − '+par(q.m2)+') = '+fmtF(num)+' / '+par(den)+' = <strong>'+fmtInt(q.x0)+'</strong>.<br>'
+        +'y = m₁ × x + p₁ = '+par(q.m1)+' × '+par(q.x0)+' + '+par(q.p1)+' = <strong>'+fmtInt(q.y0)+'</strong>.<br>'
+        +'Le point est <strong>'+ptStr(q.x0,q.y0)+'</strong>. Vérifie avec d₂ : '+par(q.m2)+' × '+par(q.x0)+' + '+par(q.p2)+' = '+fmtInt(q.y0)+'.';
+    }
+  })
+};
+function targetFor(q){return Math.round(MODES[q.m].target*LEVELS[q.level||'moyen'].mult);}
+function qKey(q){return JSON.stringify(q,function(k,v){return (k==='opts'||k==='correct')?undefined:v;});}
+/* ==LOGIC-END== */
+
+/* ------------------------------------------------------------------ */
+/* Interface                                                           */
+/* ------------------------------------------------------------------ */
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtTime(sec){sec=Math.round(sec);return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');}
+
+const store=(function(){
+  let ok=true;const mem={};
+  try{localStorage.setItem('__t','1');localStorage.removeItem('__t');}catch(e){ok=false;}
+  return {
+    ok:ok,
+    get(k,d){try{const v=ok?localStorage.getItem('eqd:'+k):mem[k];return v==null?d:JSON.parse(v);}catch(e){return d;}},
+    set(k,v){const s=JSON.stringify(v);try{if(ok)localStorage.setItem('eqd:'+k,s);else mem[k]=s;}catch(e){mem[k]=s;}}
+  };
+})();
+
+const S={kind:'normal',mode:'mixte',level:'moyen',n:10,qs:[],i:0,results:[],active:0,qStart:0,state:'idle',timer:null,autoNext:null,meta:{}};
+
+function show(id){
+  ['home','quiz','results','progress'].forEach(function(s){$(s).hidden=(s!==id);});
+  window.scrollTo(0,0);
+  if(id!=='quiz'){const h=$(id).querySelector('h1,h2');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}}
+}
+function checked(name){const e=document.querySelector('input[name="'+name+'"]:checked');return e?e.value:null;}
+function setChecked(name,val){const e=document.querySelector('input[name="'+name+'"][value="'+val+'"]');if(e)e.checked=true;}
+
+/* ---------- Accueil ---------- */
+function buildHome(){
+  const items=MODE_KEYS.map(function(k){return {k:k,label:MODES[k].label,desc:MODES[k].desc,t:MODES[k].target};});
+  items.push({k:'mixte',label:'Mixte',desc:'Un peu de tout, dans le désordre : le plus proche d’un contrôle.',t:null});
+  $('modeGrid').innerHTML=items.map(function(it){
+    return '<label class="mode"><input type="radio" name="mode" value="'+it.k+'"><span class="mbody"><strong>'+it.label+'</strong><small>'+it.desc+'</small><em>'+(it.t?'Objectif ≈ '+it.t+' s par question':'Objectif selon la question')+'</em></span></label>';
+  }).join('');
+  const prefs=store.get('prefs',{});
+  const qp=new URLSearchParams(location.search);
+  const mode=qp.get('mode')||prefs.mode||'mixte';
+  const level=qp.get('level')||prefs.level||'moyen';
+  const n=qp.get('n')||String(prefs.n||10);
+  setChecked('mode',(mode==='mixte'||MODES[mode])?mode:'mixte');
+  setChecked('level',LEVELS[level]?level:'moyen');
+  setChecked('len',['5','10','15'].indexOf(n)>=0?n:'10');
+  updateHint();updateBookBtn();
+  $('storeNote').hidden=store.ok;
+}
+function updateHint(){const l=checked('level');$('levelHint').textContent=LEVELS[l].desc+' Objectifs de temps '+(l==='facile'?'plus courts.':(l==='difficile'?'plus longs.':'standard.'));}
+function updateBookBtn(){const n=store.get('book',[]).length;$('bookBtn').textContent='Carnet d’erreurs ('+n+')';$('bookBtn').disabled=n===0;}
+
+function makeQuestions(mode,level,n){
+  const L=LEVELS[level],out=[],seen=new Set();
+  let pool=[];
+  for(let i=0;i<n;i++){
+    let m=mode;
+    if(mode==='mixte'){if(!pool.length)pool=shuffle(MODE_KEYS.slice());m=pool.pop();}
+    let q,tries=0;
+    do{q=MODES[m].gen(L);q.level=level;tries++;}while(seen.has(qKey(q))&&tries<30);
+    seen.add(qKey(q));out.push(q);
+  }
+  return out;
+}
+
+function begin(kind,qs,meta){
+  S.kind=kind;S.qs=qs;S.i=0;S.results=[];S.active=0;S.meta=meta||{};
+  clearInterval(S.timer);S.timer=setInterval(tick,200);
+  show('quiz');showQuestion();
+}
+function startNormal(){
+  S.mode=checked('mode');S.level=checked('level');S.n=parseInt(checked('len'),10);
+  store.set('prefs',{mode:S.mode,level:S.level,n:S.n});
+  begin('normal',makeQuestions(S.mode,S.level,S.n),{mode:S.mode,level:S.level});
+}
+function startBook(){
+  const b=store.get('book',[]).slice().sort(function(x,y){return x.ts-y.ts;}).slice(0,10);
+  if(!b.length)return;
+  begin('book',b.map(function(e){return JSON.parse(JSON.stringify(e.q));}),{});
+}
+
+/* ---------- Question ---------- */
+function showQuestion(){
+  clearTimeout(S.autoNext);
+  const q=S.qs[S.i],M=MODES[q.m];
+  $('qNum').textContent='Question '+(S.i+1)+' / '+S.qs.length;
+  $('qMode').textContent=M.label;
+  $('pfill').style.width=(S.i/S.qs.length*100)+'%';
+  const pr=$('qPrompt');
+  pr.innerHTML=M.prompt(q);
+  $('feedback').innerHTML='';
+  const cbox=$('qChoices');cbox.innerHTML='';
+  M.choices(q).forEach(function(t,i){
+    const b=document.createElement('button');b.type='button';b.className='choice';b.dataset.i=String(i);
+    b.innerHTML='<span class="ltr" aria-hidden="true">'+'ABCD'.charAt(i)+'</span>'+esc(t);
+    b.setAttribute('aria-label','Réponse '+'ABCD'.charAt(i)+' : '+t);
+    cbox.appendChild(b);
+  });
+  S.state='answering';S.qStart=performance.now();
+  tick();
+  pr.setAttribute('tabindex','-1');pr.focus({preventScroll:true});
+}
+
+function tick(){
+  if(S.state!=='answering')return;
+  const now=performance.now(),qt=(now-S.qStart)/1000;
+  $('tTotal').textContent=fmtTime(S.active+qt);
+  const t=$('tQ');t.textContent=Math.floor(qt)+' s';
+  t.classList.toggle('over',qt>targetFor(S.qs[S.i]));
+}
+
+function describe(q,ans){return MODES[q.m].choices(q)[ans.choice];}
+function updateBook(q,ok){
+  let b=store.get('book',[]);const k=qKey(q);
+  const idx=b.findIndex(function(e){return qKey(e.q)===k;});
+  if(!ok){if(idx<0)b.unshift({q:q,ts:Date.now()});else b[idx].ts=Date.now();}
+  else if(S.kind!=='normal'&&idx>=0){b.splice(idx,1);}
+  store.set('book',b.slice(0,40));
+}
+
+function finish(ans){
+  if(S.state!=='answering')return;
+  S.state='feedback';
+  const q=S.qs[S.i],M=MODES[q.m];
+  const dt=(performance.now()-S.qStart)/1000;S.active+=dt;
+  const ok=!!M.check(q,ans);
+  S.results.push({q:q,ok:ok,given:describe(q,ans),dt:dt});
+  updateBook(q,ok);
+  Array.prototype.forEach.call($('qChoices').querySelectorAll('button'),function(b,i){
+    b.disabled=true;
+    if(M.check(q,{choice:i}))b.classList.add('right');
+    else if(i===ans.choice)b.classList.add('wrong');
+  });
+  const last=S.i===S.qs.length-1;
+  const over=dt>targetFor(q)?' · plus long que l’objectif ('+targetFor(q)+' s)':'';
+  if(ok){
+    $('feedback').innerHTML='<div class="fb ok"><p><strong>✓ Correct</strong> · '+dt.toFixed(1)+' s'+over+'</p></div>';
+    S.autoNext=setTimeout(next,700);
+  }else{
+    $('feedback').innerHTML='<div class="fb bad"><p><strong>✗ Pas tout à fait.</strong> Bonne réponse : <span class="math" style="font-size:1.1em">'+M.answer(q)+'</span></p>'
+      +'<div class="explain">'+M.explain(q)+'</div>'
+      +'<button type="button" class="btn primary" id="nextBtn">'+(last?'Voir le bilan':'Suivant →')+'</button></div>';
+    $('nextBtn').addEventListener('click',next);
+    $('nextBtn').focus();
+  }
+}
+function next(){
+  if(S.state!=='feedback')return;
+  clearTimeout(S.autoNext);
+  S.i++;
+  if(S.i>=S.qs.length)return endSession();
+  showQuestion();
+}
+
+/* ---------- Bilan ---------- */
+function endSession(){
+  clearInterval(S.timer);S.state='idle';
+  const n=S.results.length,score=S.results.filter(function(r){return r.ok;}).length;
+  const total=S.active,avg=total/n;
+  const avgTarget=S.qs.reduce(function(s,q){return s+targetFor(q);},0)/n;
+  const acc=Math.round(score/n*100);
+  if(S.kind==='normal'){
+    const h=store.get('hist',[]);
+    h.push({t:Date.now(),mode:S.meta.mode,level:S.meta.level,n:n,score:score,sec:Math.round(total)});
+    store.set('hist',h.slice(-60));
+  }
+  const title=S.kind==='book'?'Bilan du carnet d’erreurs':(S.kind==='retry'?'Bilan des erreurs refaites':'Bilan de la série');
+  $('resTitle').textContent=title;
+  $('resStats').innerHTML=
+    '<div class="stat"><b>'+score+' / '+n+'</b><span>bonnes réponses</span></div>'+
+    '<div class="stat"><b>'+acc+' %</b><span>précision</span></div>'+
+    '<div class="stat"><b>'+fmtTime(total)+'</b><span>temps total</span></div>'+
+    '<div class="stat"><b>'+avg.toFixed(0)+' s</b><span>par question (objectif ≈ '+Math.round(avgTarget)+' s)</span></div>';
+  let m;
+  if(acc===100&&avg<=avgTarget)m='Série juste et dans les temps. Tu peux passer au niveau au-dessus.';
+  else if(acc===100)m='Tout est juste. Prochain objectif : descendre vers '+Math.round(avgTarget)+' s par question.';
+  else if(acc>=80)m='Bonne précision. Reprends les erreurs ci-dessous, puis vise le temps.';
+  else m='Commence par la précision : refais les erreurs avant de chronométrer plus serré.';
+  $('resMsg').textContent=m;
+  const errs=S.results.filter(function(r){return !r.ok;});
+  $('resErrors').innerHTML=errs.length?'<h3>À retravailler ('+errs.length+')</h3>'+errs.map(function(r){
+    const M=MODES[r.q.m];
+    return '<div class="card err"><div>'+M.prompt(r.q)+'</div>'
+      +'<p style="margin:6px 0 0">Ta réponse : <span class="math" style="font-size:1.05em">'+esc(r.given)+'</span><br>Attendu : <span class="math" style="font-size:1.05em">'+M.answer(r.q)+'</span></p>'
+      +'<details><summary>Voir la méthode</summary><div class="explain">'+M.explain(r.q)+'</div></details></div>';
+  }).join(''):'';
+  const act=$('resActions');act.innerHTML='';
+  function btn(label,cls,fn){const b=document.createElement('button');b.type='button';b.className='btn '+cls;b.textContent=label;b.addEventListener('click',fn);act.appendChild(b);}
+  if(errs.length)btn('Refaire les erreurs','primary',function(){begin('retry',errs.map(function(r){return JSON.parse(JSON.stringify(r.q));}),{});});
+  if(S.kind==='normal')btn('Nouvelle série','',function(){begin('normal',makeQuestions(S.meta.mode,S.meta.level,S.qs.length),S.meta);});
+  btn('Copier le bilan','ghost',function(){
+    const label=S.kind==='normal'?(S.meta.mode==='mixte'?'Mixte':MODES[S.meta.mode].label)+' ('+LEVELS[S.meta.level].label.toLowerCase()+')':title;
+    const text='Équation de droite · '+label+' : '+score+'/'+n+' · '+fmtTime(total)+' · '+avg.toFixed(0)+' s par question';
+    const done=function(){alert('Bilan copié.');};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,function(){window.prompt('Copie ce texte :',text);});
+    else window.prompt('Copie ce texte :',text);
+  });
+  btn('Accueil','ghost',goHome);
+  show('results');
+  updateBookBtn();
+}
+
+/* ---------- Progression ---------- */
+function showProgress(){
+  const h=store.get('hist',[]),book=store.get('book',[]);
+  let html='';
+  if(!h.length){html+='<p class="lead">Pas encore de série enregistrée. Fais une première série pour voir ta progression ici.</p>';}
+  else{
+    const nQ=h.reduce(function(s,x){return s+x.n;},0),ok=h.reduce(function(s,x){return s+x.score;},0),sec=h.reduce(function(s,x){return s+x.sec;},0);
+    html+='<div class="stats">'
+      +'<div class="stat"><b>'+h.length+'</b><span>séries</span></div>'
+      +'<div class="stat"><b>'+nQ+'</b><span>questions</span></div>'
+      +'<div class="stat"><b>'+Math.round(ok/nQ*100)+' %</b><span>précision globale</span></div>'
+      +'<div class="stat"><b>'+(sec/nQ).toFixed(0)+' s</b><span>par question</span></div></div>';
+    html+='<h3>Par type d’entraînement</h3><div class="tablewrap"><table><thead><tr><th>Type</th><th>Séries</th><th>Précision</th><th>Temps / question</th></tr></thead><tbody>';
+    const groups={};
+    h.forEach(function(x){const g=groups[x.mode]||(groups[x.mode]={n:0,q:0,ok:0,sec:0});g.n++;g.q+=x.n;g.ok+=x.score;g.sec+=x.sec;});
+    Object.keys(groups).forEach(function(k){
+      const g=groups[k];
+      html+='<tr><td>'+(k==='mixte'?'Mixte':(MODES[k]?MODES[k].label:esc(k)))+'</td><td>'+g.n+'</td><td>'+Math.round(g.ok/g.q*100)+' %</td><td>'+(g.sec/g.q).toFixed(0)+' s</td></tr>';
+    });
+    html+='</tbody></table></div>';
+    html+='<h3>Dernières séries</h3><div class="tablewrap"><table><thead><tr><th>Date</th><th>Type</th><th>Niveau</th><th>Score</th><th>Temps</th></tr></thead><tbody>';
+    h.slice(-10).reverse().forEach(function(x){
+      html+='<tr><td>'+new Date(x.t).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})+'</td><td>'+(x.mode==='mixte'?'Mixte':(MODES[x.mode]?MODES[x.mode].label:esc(x.mode)))+'</td><td>'+(LEVELS[x.level]?LEVELS[x.level].label:'')+'</td><td>'+x.score+'/'+x.n+'</td><td>'+fmtTime(x.sec)+'</td></tr>';
+    });
+    html+='</tbody></table></div>';
+  }
+  html+='<h3>Carnet d’erreurs</h3>';
+  if(!book.length)html+='<p class="lead">Le carnet est vide.</p>';
+  else{
+    const c={};book.forEach(function(e){c[e.q.m]=(c[e.q.m]||0)+1;});
+    html+='<p>'+book.length+' question'+(book.length>1?'s':'')+' à retravailler : '+Object.keys(c).map(function(k){return (MODES[k]?MODES[k].label.toLowerCase():esc(k))+' ('+c[k]+')';}).join(', ')+'.</p>'
+      +'<div class="row"><button class="btn primary" id="progBook" type="button">Travailler le carnet</button></div>';
+  }
+  $('progBody').innerHTML=html;
+  const pb=$('progBook');if(pb)pb.addEventListener('click',startBook);
+  show('progress');
+}
+function goHome(){clearInterval(S.timer);clearTimeout(S.autoNext);S.state='idle';updateBookBtn();show('home');}
+
+/* ---------- Événements ---------- */
+$('startBtn').addEventListener('click',startNormal);
+$('bookBtn').addEventListener('click',startBook);
+$('progBtn').addEventListener('click',showProgress);
+$('brandBtn').addEventListener('click',function(){if(!$('quiz').hidden&&S.state!=='idle'&&!confirm('Quitter la série en cours ?'))return;goHome();});
+$('progHome').addEventListener('click',goHome);
+$('progReset').addEventListener('click',function(){if(confirm('Effacer tout l’historique et le carnet d’erreurs ?')){store.set('hist',[]);store.set('book',[]);showProgress();updateBookBtn();}});
+$('quitBtn').addEventListener('click',function(){if(confirm('Quitter la série en cours ? Les réponses déjà données ne seront pas enregistrées dans l’historique.'))goHome();});
+$('levelSeg').addEventListener('change',updateHint);
+$('qChoices').addEventListener('click',function(e){const b=e.target.closest('button.choice');if(b&&S.state==='answering')finish({choice:parseInt(b.dataset.i,10)});});
+document.addEventListener('keydown',function(e){
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  if($('quiz').hidden)return;
+  if(S.state==='feedback'&&e.key==='Enter'){e.preventDefault();next();return;}
+  if(S.state==='answering'){
+    let i=-1;
+    if(/^[1-4]$/.test(e.key))i=parseInt(e.key,10)-1;
+    else if(/^[a-dA-D]$/.test(e.key))i='abcd'.indexOf(e.key.toLowerCase());
+    const b=i>=0?$('qChoices').children[i]:null;
+    if(b){e.preventDefault();b.click();}
+  }
+});
+
+buildHome();
+// ==EXPOSE==
+})();
+</script>
+</body>
+</html>
