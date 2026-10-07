@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Second degré · entraînement</title>
+<meta name="description" content="Entraînement chronométré sur le polynôme du second degré (Première) : discriminant, racines, somme et produit, sommet, signe du trinôme.">
+<style>
+:root{
+  --bg:#f6f7fb;--surface:#ffffff;--text:#1c1f2b;--muted:#5b6275;--line:#dfe3ee;
+  --accent:#3f4fd8;--accent-ink:#ffffff;--accent-soft:#e8eaff;
+  --ok:#14773c;--ok-soft:#e3f6ea;--bad:#b4232a;--bad-soft:#fdecec;--warn:#9a5b00;
+  --radius:14px;
+  --math:"Cambria Math","STIX Two Math","Latin Modern Math",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#12141c;--surface:#1b1e29;--text:#eceef6;--muted:#a1a8bd;--line:#2c3144;
+    --accent:#8c97ff;--accent-ink:#10122a;--accent-soft:#252a4d;
+    --ok:#5fd18a;--ok-soft:#173424;--bad:#ff8a8f;--bad-soft:#3a1d20;--warn:#f1b560}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+[hidden]{display:none!important}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+header.top{background:var(--surface);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px}
+.brand{font:inherit;font-weight:700;background:none;border:0;color:var(--text);cursor:pointer;padding:8px 0}
+.brand span{color:var(--accent)}
+main{padding:20px 0 48px}
+h1{font-size:1.6rem;line-height:1.2;margin:.2rem 0 .5rem}
+h2{font-size:1.15rem;margin:1.6rem 0 .6rem}
+h3{font-size:1rem;margin:1.2rem 0 .4rem}
+h1:focus,h2:focus{outline:none}
+.lead{color:var(--muted);margin:0 0 1rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:10px 16px;border-radius:12px;cursor:pointer;min-height:44px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent}
+.btn.small{min-height:36px;padding:6px 12px;font-size:.9rem}
+.btn.big{width:100%;font-size:1.1rem;min-height:52px}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+details.card summary{cursor:pointer;font-weight:600}
+details.card[open] summary{margin-bottom:10px}
+details.card ul{margin:.4rem 0 .8rem;padding-left:1.2rem}
+details.card li{margin:.25rem 0}
+.mode-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:600px){.mode-grid{grid-template-columns:1fr 1fr}}
+.mode{position:relative;display:block;cursor:pointer}
+.mode input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.mbody{display:block;height:100%;background:var(--surface);border:2px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.mbody strong{display:block}
+.mbody small{display:block;color:var(--muted)}
+.mbody em{display:block;font-style:normal;color:var(--muted);font-size:.85rem;margin-top:4px}
+.mode input:checked + .mbody{border-color:var(--accent);background:var(--accent-soft)}
+.mode input:focus-visible + .mbody{outline:3px solid var(--accent);outline-offset:2px}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.seg span{display:block;border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 16px;font-weight:600;min-height:44px;line-height:26px}
+.seg input:checked + span{border-color:var(--accent);background:var(--accent-soft)}
+.seg input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
+.hint{color:var(--muted);font-size:.9rem;margin:.5rem 0 0}
+.quizbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.badge{display:inline-block;background:var(--accent-soft);border-radius:999px;padding:2px 10px;font-size:.85rem;margin-left:6px}
+.timers{display:flex;gap:14px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.timer.over{color:var(--warn);font-weight:700}
+.pbar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:14px}
+.pbar>div{height:100%;background:var(--accent);width:0;transition:width .25s}
+.prompt{margin:0 0 14px;font-size:1.05rem}
+.math{font-family:var(--math);font-size:1.35em;white-space:nowrap}
+.field{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+.field label{min-width:7.5rem;font-weight:600}
+.field input{flex:1;min-width:0;font:inherit;font-size:1.2rem;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--text);min-height:48px}
+.field input:focus{border-color:var(--accent)}
+.field input[readonly]{opacity:.8}
+.choices{display:grid;gap:10px;margin-bottom:10px}
+.choice{font-family:var(--math);font-size:1.2rem;text-align:left;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);cursor:pointer;min-height:48px}
+.choice:hover:not(:disabled){border-color:var(--accent)}
+.choice:disabled{cursor:default;color:var(--text)}
+.choice.right{border-color:var(--ok);background:var(--ok-soft)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.keys{display:none;gap:8px;margin-top:10px}
+@media(pointer:coarse){.keys{display:flex}}
+.keys button{font:inherit;font-size:1.2rem;min-width:52px;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
+.formmsg{margin:8px 0 0;color:var(--bad);font-weight:600;min-height:1.5em}
+.fb{margin-top:14px;border-radius:12px;padding:12px 14px;border:1px solid var(--line)}
+.fb.ok{background:var(--ok-soft);border-color:var(--ok)}
+.fb.bad{background:var(--bad-soft);border-color:var(--bad)}
+.fb p{margin:0 0 6px}
+.explain{margin:8px 0 12px;font-size:.97rem}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0}
+@media(min-width:600px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:.85rem}
+.err{margin:10px 0}
+.err .math{font-size:1.2em}
+.err details{margin-top:6px}
+.err summary{cursor:pointer;color:var(--accent);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:.95rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th{color:var(--muted);font-weight:600;font-size:.85rem}
+tr:last-child td{border-bottom:0}
+.tablewrap{overflow-x:auto}
+.note{color:var(--muted);font-size:.85rem;margin-top:28px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <button class="brand" id="brandBtn" type="button">Second degré <span>· entraînement</span></button>
+  <button class="btn small" id="progBtn" type="button">Ma progression</button>
+</div></header>
+
+<main class="wrap">
+<noscript><p class="card">Cette page a besoin de JavaScript pour générer les exercices.</p></noscript>
+
+<!-- ACCUEIL -->
+<section id="home" aria-labelledby="homeTitle">
+  <h1 id="homeTitle">Second degré : vitesse et précision</h1>
+  <p class="lead">Séries chronométrées de questions courtes. Chaque erreur est corrigée avec la méthode, puis ajoutée à ton carnet pour être retravaillée plus tard.</p>
+
+  <details class="card" id="memo">
+    <summary>Rappels : formules et astuces</summary>
+    <ul>
+      <li><strong>Trinôme</strong> f(x) = ax² + bx + c, avec a ≠ 0. <strong>Discriminant</strong> Δ = b² − 4ac.</li>
+      <li><strong>Δ &gt; 0</strong> : deux racines x = (−b ± √Δ) / (2a). <strong>Δ = 0</strong> : une racine double x₀ = −b / (2a). <strong>Δ &lt; 0</strong> : aucune racine réelle.</li>
+      <li><strong>Somme et produit</strong> : x₁ + x₂ = −b/a et x₁ × x₂ = c/a. Ils servent aussi à vérifier ses racines.</li>
+      <li><strong>Racine évidente</strong> : si a + b + c = 0, alors 1 est racine ; si a − b + c = 0, alors −1 est racine. L’autre racine se déduit du produit : c/a (ou −c/a).</li>
+      <li><strong>Forme canonique</strong> : f(x) = a(x − α)² + β avec α = −b/(2a) et β = f(α) = −Δ/(4a). Le sommet de la parabole est (α ; β).</li>
+      <li><strong>Factorisation</strong> (si Δ ≥ 0) : f(x) = a(x − x₁)(x − x₂).</li>
+      <li><strong>Signe</strong> (si Δ &gt; 0) : f(x) a le signe de a à l’extérieur des racines, et le signe contraire entre elles. Si Δ &lt; 0, f(x) a le signe de a partout.</li>
+      <li><strong>Pièges classiques</strong> : (−b)² mal calculé quand b est négatif ; signe de −4ac ; oubli du 2a au dénominateur ; bornes ouvertes ou fermées selon &gt; ou ≥.</li>
+    </ul>
+  </details>
+
+  <h2>1. Choisis un entraînement</h2>
+  <div class="mode-grid" id="modeGrid" role="radiogroup" aria-label="Type d’entraînement"></div>
+
+  <h2>2. Niveau</h2>
+  <div class="seg" role="radiogroup" aria-label="Niveau" id="levelSeg">
+    <label><input type="radio" name="level" value="facile"><span>Facile</span></label>
+    <label><input type="radio" name="level" value="moyen"><span>Moyen</span></label>
+    <label><input type="radio" name="level" value="difficile"><span>Difficile</span></label>
+  </div>
+  <p class="hint" id="levelHint"></p>
+
+  <h2>3. Nombre de questions</h2>
+  <div class="seg" role="radiogroup" aria-label="Nombre de questions" id="lenSeg">
+    <label><input type="radio" name="len" value="5"><span>5</span></label>
+    <label><input type="radio" name="len" value="10"><span>10</span></label>
+    <label><input type="radio" name="len" value="15"><span>15</span></label>
+  </div>
+
+  <div class="row">
+    <button class="btn primary big" id="startBtn" type="button">Commencer la série</button>
+  </div>
+  <div class="row">
+    <button class="btn" id="bookBtn" type="button">Carnet d’erreurs</button>
+  </div>
+  <p class="hint">Le carnet regroupe les questions ratées. Une question réussie depuis le carnet en sort.</p>
+  <p class="note" id="storeNote" hidden>Ce navigateur bloque l’enregistrement local : l’historique et le carnet seront perdus à la fermeture de la page.</p>
+  <p class="note">Page statique : aucune donnée n’est envoyée nulle part. L’historique et le carnet restent dans ce navigateur, sur cet appareil.</p>
+</section>
+
+<!-- QUESTIONS -->
+<section id="quiz" hidden aria-label="Série en cours">
+  <div class="quizbar">
+    <div><strong id="qNum"></strong><span class="badge" id="qMode"></span></div>
+    <div class="timers" aria-hidden="true"><span>Total <b id="tTotal">0:00</b></span><span id="tQ" class="timer">0 s</span></div>
+    <button class="btn ghost small" id="quitBtn" type="button">Quitter</button>
+  </div>
+  <div class="pbar" aria-hidden="true"><div id="pfill"></div></div>
+  <div class="card">
+    <p class="prompt" id="qPrompt"></p>
+    <form id="qForm" autocomplete="off" novalidate>
+      <div id="qFields"></div>
+      <div id="qChoices" class="choices"></div>
+      <div class="actions">
+        <button type="submit" class="btn primary" id="submitBtn">Valider</button>
+        <button type="button" class="btn" id="noneBtn">Aucune solution réelle</button>
+      </div>
+      <div class="keys" id="keys" aria-hidden="true">
+        <button type="button" data-k="-" tabindex="-1">−</button>
+        <button type="button" data-k="/" tabindex="-1">/</button>
+        <button type="button" data-k="," tabindex="-1">,</button>
+      </div>
+      <p class="formmsg" id="formMsg" role="alert"></p>
+    </form>
+    <div id="feedback" role="status" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- BILAN -->
+<section id="results" hidden aria-labelledby="resTitle">
+  <h2 id="resTitle">Bilan de la série</h2>
+  <div class="stats" id="resStats"></div>
+  <p id="resMsg" class="lead"></p>
+  <div id="resErrors"></div>
+  <div class="row" id="resActions"></div>
+</section>
+
+<!-- PROGRESSION -->
+<section id="progress" hidden aria-labelledby="progTitle">
+  <h2 id="progTitle">Ma progression</h2>
+  <div id="progBody"></div>
+  <div class="row">
+    <button class="btn" id="progHome" type="button">Retour</button>
+    <button class="btn ghost" id="progReset" type="button">Effacer l’historique</button>
+  </div>
+</section>
+</main>
+
+<script>
+(function(){
+'use strict';
+
+/* ==LOGIC-START== */
+const MINUS='−';
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=a%b;a=b;b=t;}return a;}
+function F(n,d){if(d===undefined)d=1;if(d<0){n=-n;d=-d;}const g=gcd(n,d)||1;return [n/g,d/g];}
+function fmtInt(n){return n<0?MINUS+Math.abs(n):String(n);}
+function fmtF(f){return f[1]===1?fmtInt(f[0]):fmtInt(f[0])+'/'+f[1];}
+function par(x){const s=typeof x==='number'?fmtInt(x):fmtF(x);return s.charAt(0)===MINUS?'('+s+')':s;}
+function fneg(f){return [-f[0],f[1]];}
+function polyStr(a,b,c){
+  let s=a===1?'x²':(a===-1?MINUS+'x²':fmtInt(a)+'x²');
+  if(b!==0)s+=(b<0?' '+MINUS+' ':' + ')+(Math.abs(b)===1?'':Math.abs(b))+'x';
+  if(c!==0)s+=(c<0?' '+MINUS+' ':' + ')+Math.abs(c);
+  return s;
+}
+function canonStr(a,al,be){
+  const sq=al[0]===0?'x²':'(x '+(al[0]<0?'+':MINUS)+' '+fmtF([Math.abs(al[0]),al[1]])+')²';
+  let s=(a===1?'':(a===-1?MINUS:fmtInt(a)))+sq;
+  if(be[0]!==0)s+=' '+(be[0]<0?MINUS:'+')+' '+fmtF([Math.abs(be[0]),be[1]]);
+  return s;
+}
+function disc(a,b,c){return b*b-4*a*c;}
+function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=arr[i];arr[i]=arr[j];arr[j]=t;}return arr;}
+
+/* Lecture d'une réponse saisie : entier, fraction a/b ou décimal (virgule ou point). */
+function parseNum(str){
+  const s=String(str).trim().replace(/[−–—]/g,'-').replace(/\s+/g,'').replace(/,/g,'.');
+  if(!s)return null;
+  let m=s.match(/^([+-]?\d+)\/(\d+)$/);
+  if(m){const n=parseInt(m[1],10),d=parseInt(m[2],10);if(d===0)return null;return {f:F(n,d)};}
+  m=s.match(/^[+-]?\d+(\.\d+)?$/);
+  if(m){return m[1]===undefined?{f:F(parseInt(s,10),1)}:{val:parseFloat(s)};}
+  return null;
+}
+function eqNum(p,f){
+  if(!p)return false;
+  if(p.f)return p.f[0]*f[1]===f[0]*p.f[1];
+  const ev=f[0]/f[1];
+  if(Math.abs(p.val-ev)<1e-9)return true;
+  if(100%f[1]!==0&&Math.abs(p.val-ev)<0.01)return true; /* valeur non décimale (ex. 1/3) : arrondi à 2 décimales toléré */
+  return false;
+}
+
+const LEVELS={
+  facile:{label:'Facile',desc:'Coefficient a = 1, nombres entiers.',mult:0.8,aList:[1],b:[-8,8],c:[-8,8],leads:[1],rational:false,roots:[-6,7]},
+  moyen:{label:'Moyen',desc:'Coefficient a entre −3 et 3, racines entières.',mult:1,aList:[1,-1,2,-2,3,-3],b:[-9,9],c:[-9,9],leads:[1,-1,2,-2,3,-3],rational:false,roots:[-8,8]},
+  difficile:{label:'Difficile',desc:'Racines fractionnaires, coefficients plus grands.',mult:1.3,aList:[1,-1,2,-2,3,-3,4,-4,5,-5],b:[-12,12],c:[-12,12],leads:[1,1,-1,-1,2,-2],rational:true,roots:[-7,7]}
+};
+const OPS=[
+  {s:'≥',h:'≥',strict:false,pos:true},
+  {s:'>',h:'&gt;',strict:true,pos:true},
+  {s:'≤',h:'≤',strict:false,pos:false},
+  {s:'<',h:'&lt;',strict:true,pos:false}
+];
+
+function randRoot(L){
+  if(!L.rational)return F(rnd(L.roots[0],L.roots[1]),1);
+  return F(rnd(-5,5),pick([1,2,2,3]));
+}
+function polyFromRoots(r1,r2,lead){
+  const n1=r1[0],d1=r1[1],n2=r2[0],d2=r2[1];
+  return {a:lead*d1*d2,b:-lead*(d1*n2+d2*n1),c:lead*n1*n2};
+}
+/* Trinôme construit à partir de ses racines : 'distinct' ou 'double'. r1 <= r2. */
+function twoRoots(L,kind){
+  let r1,r2;
+  do{r1=randRoot(L);r2=kind==='double'?r1:randRoot(L);}
+  while(kind==='distinct'&&r1[0]*r2[1]===r2[0]*r1[1]);
+  const p=polyFromRoots(r1,r2,pick(L.leads));
+  const rs=[r1,r2].sort((x,y)=>x[0]*y[1]-y[0]*x[1]);
+  return {a:p.a,b:p.b,c:p.c,r1:rs[0],r2:rs[1]};
+}
+function noRoots(L){
+  let a,b,c;
+  do{a=pick(L.aList);b=rnd(L.b[0],L.b[1]);c=rnd(L.c[0],L.c[1]);}while(disc(a,b,c)>=0);
+  return {a:a,b:b,c:c};
+}
+function genGeneral(L){
+  return {a:pick(L.aList),b:rnd(L.b[0],L.b[1]),c:rnd(L.c[0],L.c[1])};
+}
+function nsolCount(q){const D=disc(q.a,q.b,q.c);return D>0?2:(D===0?1:0);}
+
+function ivInside(x1,x2,closed){return (closed?'[':']')+fmtF(x1)+' ; '+fmtF(x2)+(closed?']':'[');}
+function ivOutside(x1,x2,closed){
+  return closed?(']'+MINUS+'∞ ; '+fmtF(x1)+'] ∪ ['+fmtF(x2)+' ; +∞['):(']'+MINUS+'∞ ; '+fmtF(x1)+'[ ∪ ]'+fmtF(x2)+' ; +∞[');
+}
+function ivStr(out,closed,x1,x2){return out?ivOutside(x1,x2,closed):ivInside(x1,x2,closed);}
+
+function explainRoots(q){
+  const a=q.a,b=q.b,c=q.c,D=disc(a,b,c);
+  const s='Δ = b² − 4ac = '+par(b)+'² − 4 × '+par(a)+' × '+par(c)+' = '+(b*b)+' − '+par(4*a*c)+' = <strong>'+fmtInt(D)+'</strong>.<br>';
+  if(D<0)return s+'Δ &lt; 0 : l’équation n’a <strong>aucune solution réelle</strong>.';
+  if(D===0)return s+'Δ = 0 : racine double x₀ = −b/(2a) = −'+par(b)+' / (2 × '+par(a)+') = <strong>'+fmtF(F(-b,2*a))+'</strong>.';
+  const sq=Math.round(Math.sqrt(D));
+  const x1=F(-b-sq,2*a),x2=F(-b+sq,2*a);
+  let t=s+'Δ &gt; 0 : deux racines x = (−b ± √Δ) / (2a), avec √Δ = '+sq+'.<br>'
+    +'x₁ = ('+fmtInt(-b)+' − '+sq+') / '+fmtInt(2*a)+' = <strong>'+fmtF(x1)+'</strong> ; '
+    +'x₂ = ('+fmtInt(-b)+' + '+sq+') / '+fmtInt(2*a)+' = <strong>'+fmtF(x2)+'</strong>.<br>'
+    +'Vérification : x₁ + x₂ = −b/a = '+fmtF(F(-b,a))+' et x₁ × x₂ = c/a = '+fmtF(F(c,a))+'.';
+  if(a+b+c===0)t+='<br>Astuce : a + b + c = 0, donc 1 est racine évidente.';
+  else if(a-b+c===0)t+='<br>Astuce : a − b + c = 0, donc −1 est racine évidente.';
+  return t;
+}
+
+const MODE_KEYS=['disc','nsol','roots','sp','obv','vertex','sign'];
+const MODES={
+  disc:{
+    label:'Discriminant',desc:'Calculer Δ = b² − 4ac sans se tromper de signe.',target:15,
+    gen(L){let b=rnd(L.b[0],L.b[1]);if(b===0)b=pick([-1,1])*rnd(1,L.b[1]);return {m:'disc',a:pick(L.aList),b:b,c:rnd(L.c[0],L.c[1])};},
+    prompt:q=>'Calcule le discriminant de <span class="math">'+polyStr(q.a,q.b,q.c)+'</span>',
+    fields:()=>[{label:'Δ ='}],
+    solve:q=>({vals:[String(disc(q.a,q.b,q.c))]}),
+    check:(q,ans)=>eqNum(parseNum(ans.vals[0]),F(disc(q.a,q.b,q.c))),
+    answer:q=>'Δ = '+fmtInt(disc(q.a,q.b,q.c)),
+    explain:q=>'Δ = b² − 4ac = '+par(q.b)+'² − 4 × '+par(q.a)+' × '+par(q.c)+' = '+(q.b*q.b)+' − '+par(4*q.a*q.c)+' = <strong>'+fmtInt(disc(q.a,q.b,q.c))+'</strong>'
+  },
+  nsol:{
+    label:'Nombre de solutions',desc:'Lire le signe de Δ : 0, 1 ou 2 solutions ?',target:20,
+    gen(L){
+      const k=pick([0,1,2]);let p;
+      if(k===0)p=noRoots(L);
+      else if(k===1)p=twoRoots(L,'double');
+      else if(Math.random()<0.5)p=twoRoots(L,'distinct');
+      else{do{p=genGeneral(L);}while(disc(p.a,p.b,p.c)<=0);}
+      return {m:'nsol',a:p.a,b:p.b,c:p.c};
+    },
+    prompt:q=>'Combien de solutions réelles a l’équation <span class="math">'+polyStr(q.a,q.b,q.c)+' = 0</span> ?',
+    choices:()=>['Aucune solution','Une solution','Deux solutions'],
+    solve:q=>({choice:nsolCount(q)}),
+    check:(q,ans)=>ans.choice===nsolCount(q),
+    answer:q=>MODES.nsol.choices()[nsolCount(q)],
+    explain:q=>{
+      const D=disc(q.a,q.b,q.c);
+      return 'Δ = b² − 4ac = '+par(q.b)+'² − 4 × '+par(q.a)+' × '+par(q.c)+' = <strong>'+fmtInt(D)+'</strong>. '
+        +(D>0?'Δ &gt; 0 : deux solutions.':(D===0?'Δ = 0 : une solution (racine double).':'Δ &lt; 0 : aucune solution réelle.'));
+    }
+  },
+  roots:{
+    label:'Résoudre',desc:'Trouver les racines, ou constater qu’il n’y en a pas.',target:45,hasNone:true,
+    gen(L){
+      const r=Math.random();
+      if(r<0.18){const p=noRoots(L);return {m:'roots',a:p.a,b:p.b,c:p.c,nr:0,roots:[]};}
+      if(r<0.30){const p=twoRoots(L,'double');return {m:'roots',a:p.a,b:p.b,c:p.c,nr:1,roots:[p.r1]};}
+      const p=twoRoots(L,'distinct');return {m:'roots',a:p.a,b:p.b,c:p.c,nr:2,roots:[p.r1,p.r2]};
+    },
+    prompt:q=>'Résous dans ℝ : <span class="math">'+polyStr(q.a,q.b,q.c)+' = 0</span>',
+    fields:()=>[{label:'x₁ ='},{label:'x₂ ='}],
+    solve:q=>q.nr===0?{none:true,vals:['','']}:{vals:q.roots.map(fmtF).concat(['']).slice(0,2)},
+    check(q,ans){
+      if(q.nr===0)return !!ans.none;
+      if(ans.none)return false;
+      const ps=ans.vals.map(parseNum).filter(Boolean);
+      if(q.nr===1)return ps.length>=1&&ps.every(p=>eqNum(p,q.roots[0]));
+      if(ps.length!==2)return false;
+      const r1=q.roots[0],r2=q.roots[1];
+      return (eqNum(ps[0],r1)&&eqNum(ps[1],r2))||(eqNum(ps[0],r2)&&eqNum(ps[1],r1));
+    },
+    answer:q=>q.nr===0?'Aucune solution réelle':(q.nr===1?'x₀ = '+fmtF(q.roots[0]):'x₁ = '+fmtF(q.roots[0])+' ; x₂ = '+fmtF(q.roots[1])),
+    explain:q=>explainRoots(q)
+  },
+  sp:{
+    label:'Somme et produit',desc:'Trouver S = x₁ + x₂ et P = x₁ × x₂ sans résoudre.',target:30,needAll:true,
+    gen(L){const p=twoRoots(L,'distinct');return {m:'sp',a:p.a,b:p.b,c:p.c};},
+    prompt:q=>'L’équation <span class="math">'+polyStr(q.a,q.b,q.c)+' = 0</span> a deux racines x₁ et x₂. Sans la résoudre, donne leur somme S et leur produit P.',
+    fields:()=>[{label:'S = x₁ + x₂'},{label:'P = x₁ × x₂'}],
+    solve:q=>({vals:[fmtF(F(-q.b,q.a)),fmtF(F(q.c,q.a))]}),
+    check:(q,ans)=>eqNum(parseNum(ans.vals[0]),F(-q.b,q.a))&&eqNum(parseNum(ans.vals[1]),F(q.c,q.a)),
+    answer:q=>'S = '+fmtF(F(-q.b,q.a))+' ; P = '+fmtF(F(q.c,q.a)),
+    explain:q=>'S = −b/a = −'+par(q.b)+' / '+par(q.a)+' = <strong>'+fmtF(F(-q.b,q.a))+'</strong>.<br>P = c/a = '+par(q.c)+' / '+par(q.a)+' = <strong>'+fmtF(F(q.c,q.a))+'</strong>.'
+  },
+  obv:{
+    label:'Racine évidente',desc:'Repérer 1 ou −1, puis déduire l’autre racine avec le produit.',target:30,needAll:true,
+    gen(L){
+      for(;;){
+        const a=pick(L.aList),b=rnd(L.b[0],L.b[1]);
+        const c1=Math.random()<0.5;
+        const c=c1?-a-b:b-a;
+        if(c===0||Math.abs(c)>30)continue;
+        const other=c1?F(c,a):F(-c,a);
+        const e=c1?1:-1;
+        if(other[1]===1&&other[0]===e)continue;
+        return {m:'obv',a:a,b:b,c:c,e:e,other:other};
+      }
+    },
+    prompt:q=>'<span class="math">'+polyStr(q.a,q.b,q.c)+' = 0</span> a une racine évidente (1 ou −1). Donne-la, puis donne l’autre racine.',
+    fields:()=>[{label:'Racine évidente'},{label:'Autre racine'}],
+    solve:q=>({vals:[String(q.e),fmtF(q.other)]}),
+    check(q,ans){
+      const p0=parseNum(ans.vals[0]),p1=parseNum(ans.vals[1]);
+      if(eqNum(p0,F(q.e))&&eqNum(p1,q.other))return true;
+      if(q.other[1]===1&&Math.abs(q.other[0])===1)return eqNum(p0,q.other)&&eqNum(p1,F(q.e));
+      return false;
+    },
+    answer:q=>'racine évidente '+fmtInt(q.e)+' ; autre racine '+fmtF(q.other),
+    explain(q){
+      if(q.e===1)return 'a + b + c = '+q.a+' + '+par(q.b)+' + '+par(q.c)+' = 0, donc <strong>1</strong> est racine.<br>Produit des racines : 1 × x₂ = c/a, donc x₂ = '+par(q.c)+' / '+par(q.a)+' = <strong>'+fmtF(q.other)+'</strong>.';
+      return 'a − b + c = '+q.a+' − '+par(q.b)+' + '+par(q.c)+' = 0, donc <strong>−1</strong> est racine.<br>Produit des racines : (−1) × x₂ = c/a, donc x₂ = −'+par(q.c)+' / '+par(q.a)+' = <strong>'+fmtF(q.other)+'</strong>.';
+    }
+  },
+  vertex:{
+    label:'Sommet et forme canonique',desc:'Calculer α = −b/(2a) et β = f(α).',target:45,needAll:true,
+    gen(L,lvl){
+      let a,b,c;
+      if(L.rational){
+        a=pick([1,-1,2,-2,3,-3]);b=rnd(-9,9);if(b===0)b=pick([-3,-1,1,3]);c=rnd(-9,9);
+      }else{
+        a=pick(L.aList);const al=rnd(-5,5),be=rnd(-9,9);
+        b=-2*a*al;c=be+a*al*al;
+      }
+      return {m:'vertex',a:a,b:b,c:c};
+    },
+    prompt:q=>'La parabole <span class="math">y = '+polyStr(q.a,q.b,q.c)+'</span> a pour sommet S(α ; β). Donne α et β.',
+    fields:()=>[{label:'α ='},{label:'β ='}],
+    solve:q=>({vals:[fmtF(F(-q.b,2*q.a)),fmtF(F(-disc(q.a,q.b,q.c),4*q.a))]}),
+    check:(q,ans)=>eqNum(parseNum(ans.vals[0]),F(-q.b,2*q.a))&&eqNum(parseNum(ans.vals[1]),F(-disc(q.a,q.b,q.c),4*q.a)),
+    answer:q=>'α = '+fmtF(F(-q.b,2*q.a))+' ; β = '+fmtF(F(-disc(q.a,q.b,q.c),4*q.a)),
+    explain(q){
+      const D=disc(q.a,q.b,q.c),al=F(-q.b,2*q.a),be=F(-D,4*q.a);
+      return 'α = −b/(2a) = −'+par(q.b)+' / (2 × '+par(q.a)+') = <strong>'+fmtF(al)+'</strong>.<br>'
+        +'β = f(α) = −Δ/(4a) avec Δ = '+fmtInt(D)+' : β = −'+par(D)+' / (4 × '+par(q.a)+') = <strong>'+fmtF(be)+'</strong>.<br>'
+        +'Forme canonique : f(x) = '+canonStr(q.a,al,be)+'.';
+    }
+  },
+  sign:{
+    label:'Signe et inéquations',desc:'Résoudre ax² + bx + c ≥ 0 (ou >, ≤, <) : choisir le bon intervalle.',target:50,
+    gen(L){
+      const t=twoRoots(L,'distinct');
+      const op=pick(OPS);
+      const out=(t.a>0)===op.pos,closed=!op.strict;
+      const correct=ivStr(out,closed,t.r1,t.r2);
+      const n1=fneg(t.r2),n2=fneg(t.r1);
+      const cands=[
+        ivStr(!out,closed,t.r1,t.r2),
+        ivStr(out,!closed,t.r1,t.r2),
+        ivStr(out,closed,n1,n2),
+        ivStr(!out,!closed,t.r1,t.r2),
+        ivStr(!out,closed,n1,n2),
+        ivStr(out,closed,t.r1,[t.r2[0]+t.r2[1],t.r2[1]]),
+        ivStr(out,closed,[t.r1[0]-t.r1[1],t.r1[1]],t.r2)
+      ];
+      const opts=[correct];
+      for(let i=0;i<cands.length&&opts.length<4;i++){if(opts.indexOf(cands[i])<0)opts.push(cands[i]);}
+      shuffle(opts);
+      return {m:'sign',a:t.a,b:t.b,c:t.c,op:op.s,r1:t.r1,r2:t.r2,opts:opts,correct:opts.indexOf(correct)};
+    },
+    prompt(q){const op=OPS.filter(o=>o.s===q.op)[0];return 'Résous dans ℝ : <span class="math">'+polyStr(q.a,q.b,q.c)+' '+op.h+' 0</span>';},
+    choices:q=>q.opts,
+    solve:q=>({choice:q.correct}),
+    check:(q,ans)=>ans.choice===q.correct,
+    answer:q=>q.opts[q.correct],
+    explain(q){
+      const op=OPS.filter(o=>o.s===q.op)[0],D=disc(q.a,q.b,q.c);
+      const out=(q.a>0)===op.pos,closed=!op.strict;
+      return 'Δ = '+fmtInt(D)+' &gt; 0 : deux racines x₁ = '+fmtF(q.r1)+' et x₂ = '+fmtF(q.r2)+'.<br>'
+        +'a = '+fmtInt(q.a)+' : le trinôme est '+(q.a>0?'positif':'négatif')+' à l’extérieur des racines et '+(q.a>0?'négatif':'positif')+' entre elles.<br>'
+        +'On veut '+op.h+' 0 : '+(out?'à l’extérieur des racines':'entre les racines')+', bornes '+(closed?'incluses':'exclues')+'.<br>'
+        +'<strong>S = '+q.opts[q.correct]+'</strong>';
+    }
+  }
+};
+function targetFor(q){return Math.round(MODES[q.m].target*LEVELS[q.level||'moyen'].mult);}
+/* ==LOGIC-END== */
+
+/* ------------------------------------------------------------------ */
+/* Interface                                                           */
+/* ------------------------------------------------------------------ */
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtTime(sec){sec=Math.round(sec);return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');}
+
+const store=(function(){
+  let ok=true;const mem={};
+  try{localStorage.setItem('__t','1');localStorage.removeItem('__t');}catch(e){ok=false;}
+  return {
+    ok:ok,
+    get(k,d){try{const v=ok?localStorage.getItem('sd2:'+k):mem[k];return v==null?d:JSON.parse(v);}catch(e){return d;}},
+    set(k,v){const s=JSON.stringify(v);try{if(ok)localStorage.setItem('sd2:'+k,s);else mem[k]=s;}catch(e){mem[k]=s;}}
+  };
+})();
+
+const S={kind:'normal',mode:'mixte',level:'moyen',n:10,qs:[],i:0,results:[],active:0,qStart:0,state:'idle',timer:null,autoNext:null,lastInput:null};
+
+function show(id){
+  ['home','quiz','results','progress'].forEach(function(s){$(s).hidden=(s!==id);});
+  window.scrollTo(0,0);
+  if(id!=='quiz'){const h=$(id).querySelector('h1,h2');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}}
+}
+function checked(name){const e=document.querySelector('input[name="'+name+'"]:checked');return e?e.value:null;}
+function setChecked(name,val){const e=document.querySelector('input[name="'+name+'"][value="'+val+'"]');if(e)e.checked=true;}
+
+/* ---------- Accueil ---------- */
+function buildHome(){
+  const items=MODE_KEYS.map(function(k){return {k:k,label:MODES[k].label,desc:MODES[k].desc,t:MODES[k].target};});
+  items.push({k:'mixte',label:'Mixte',desc:'Un peu de tout, dans le désordre : le plus proche d’un contrôle.',t:null});
+  $('modeGrid').innerHTML=items.map(function(it){
+    return '<label class="mode"><input type="radio" name="mode" value="'+it.k+'"><span class="mbody"><strong>'+it.label+'</strong><small>'+it.desc+'</small><em>'+(it.t?'Objectif ≈ '+it.t+' s par question':'Objectif selon la question')+'</em></span></label>';
+  }).join('');
+  const prefs=store.get('prefs',{});
+  const qp=new URLSearchParams(location.search);
+  const mode=qp.get('mode')||prefs.mode||'mixte';
+  const level=qp.get('level')||prefs.level||'moyen';
+  const n=qp.get('n')||String(prefs.n||10);
+  setChecked('mode',(mode==='mixte'||MODES[mode])?mode:'mixte');
+  setChecked('level',LEVELS[level]?level:'moyen');
+  setChecked('len',['5','10','15'].indexOf(n)>=0?n:'10');
+  updateHint();updateBookBtn();
+  $('storeNote').hidden=store.ok;
+}
+function updateHint(){const l=checked('level');$('levelHint').textContent=LEVELS[l].desc+' Objectifs de temps '+(l==='facile'?'plus courts.':(l==='difficile'?'plus longs.':'standard.'));}
+function updateBookBtn(){const n=store.get('book',[]).length;$('bookBtn').textContent='Carnet d’erreurs ('+n+')';$('bookBtn').disabled=n===0;}
+
+function makeQuestions(mode,level,n){
+  const L=LEVELS[level],out=[],seen=new Set();
+  let pool=[];
+  for(let i=0;i<n;i++){
+    let m=mode;
+    if(mode==='mixte'){if(!pool.length)pool=shuffle(MODE_KEYS.slice());m=pool.pop();}
+    let q,tries=0;
+    do{q=MODES[m].gen(L);q.level=level;tries++;}while(seen.has(JSON.stringify(q))&&tries<30);
+    seen.add(JSON.stringify(q));out.push(q);
+  }
+  return out;
+}
+
+function begin(kind,qs,meta){
+  S.kind=kind;S.qs=qs;S.i=0;S.results=[];S.active=0;S.meta=meta||{};
+  clearInterval(S.timer);S.timer=setInterval(tick,200);
+  show('quiz');showQuestion();
+}
+function startNormal(){
+  S.mode=checked('mode');S.level=checked('level');S.n=parseInt(checked('len'),10);
+  store.set('prefs',{mode:S.mode,level:S.level,n:S.n});
+  begin('normal',makeQuestions(S.mode,S.level,S.n),{mode:S.mode,level:S.level});
+}
+function startBook(){
+  const b=store.get('book',[]).slice().sort(function(x,y){return x.ts-y.ts;}).slice(0,10);
+  if(!b.length)return;
+  begin('book',b.map(function(e){return JSON.parse(JSON.stringify(e.q));}),{});
+}
+
+/* ---------- Question ---------- */
+function showQuestion(){
+  clearTimeout(S.autoNext);
+  const q=S.qs[S.i],M=MODES[q.m];
+  $('qNum').textContent='Question '+(S.i+1)+' / '+S.qs.length;
+  $('qMode').textContent=M.label;
+  $('pfill').style.width=(S.i/S.qs.length*100)+'%';
+  $('qPrompt').innerHTML=M.prompt(q);
+  $('formMsg').textContent='';$('feedback').innerHTML='';
+  const fl=M.fields?M.fields(q):null;
+  const box=$('qFields');box.innerHTML='';
+  if(fl){
+    fl.forEach(function(f,i){
+      const d=document.createElement('div');d.className='field';
+      d.innerHTML='<label for="f'+i+'">'+f.label+'</label><input id="f'+i+'" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="'+(i===fl.length-1?'done':'next')+'">';
+      box.appendChild(d);
+    });
+  }
+  const ch=M.choices?M.choices(q):null;
+  const cbox=$('qChoices');cbox.innerHTML='';
+  if(ch){
+    ch.forEach(function(t,i){
+      const b=document.createElement('button');b.type='button';b.className='choice';b.dataset.i=String(i);
+      b.innerHTML='<span style="opacity:.6;font-family:system-ui,sans-serif;font-size:.85rem;margin-right:8px">'+(i+1)+'</span>'+esc(t);
+      cbox.appendChild(b);
+    });
+  }
+  $('submitBtn').hidden=!fl;$('submitBtn').disabled=false;
+  $('noneBtn').hidden=!M.hasNone;$('noneBtn').disabled=false;
+  $('keys').hidden=!fl;
+  S.state='answering';S.qStart=performance.now();
+  tick();
+  const first=box.querySelector('input');if(first)first.focus();
+}
+
+function tick(){
+  if(S.state!=='answering')return;
+  const now=performance.now(),qt=(now-S.qStart)/1000;
+  $('tTotal').textContent=fmtTime(S.active+qt);
+  const t=$('tQ');t.textContent=Math.floor(qt)+' s';
+  t.classList.toggle('over',qt>targetFor(S.qs[S.i]));
+}
+function msg(t){$('formMsg').textContent=t;}
+
+function submitFields(ev){
+  if(ev)ev.preventDefault();
+  if(S.state!=='answering')return;
+  const q=S.qs[S.i],M=MODES[q.m];
+  if(!M.fields)return;
+  const vals=Array.prototype.map.call($('qFields').querySelectorAll('input'),function(i){return i.value.trim();});
+  const filled=vals.filter(function(v){return v!=='';});
+  if(!filled.length)return msg(M.hasNone?'Écris une réponse, ou clique sur « Aucune solution réelle ».':'Écris une réponse avant de valider.');
+  if(vals.some(function(v){return v!==''&&!parseNum(v);}))return msg('Format non reconnu : écris un entier, une fraction (3/2) ou un décimal (1,5).');
+  if(M.needAll&&filled.length<vals.length)return msg('Remplis tous les champs.');
+  finish({vals:vals});
+}
+
+function describe(q,ans){
+  const M=MODES[q.m];
+  if(ans.choice!==undefined)return M.choices(q)[ans.choice];
+  if(ans.none)return 'Aucune solution réelle';
+  const fl=M.fields(q);
+  return fl.map(function(f,i){return ans.vals[i]?f.label+' '+ans.vals[i]:null;}).filter(Boolean).join(' ; ');
+}
+function updateBook(q,ok){
+  let b=store.get('book',[]);const k=JSON.stringify(q);
+  const idx=b.findIndex(function(e){return JSON.stringify(e.q)===k;});
+  if(!ok){if(idx<0)b.unshift({q:q,ts:Date.now()});else b[idx].ts=Date.now();}
+  else if(S.kind!=='normal'&&idx>=0){b.splice(idx,1);}
+  store.set('book',b.slice(0,40));
+}
+
+function finish(ans){
+  if(S.state!=='answering')return;
+  S.state='feedback';
+  const q=S.qs[S.i],M=MODES[q.m];
+  const dt=(performance.now()-S.qStart)/1000;S.active+=dt;
+  const ok=!!M.check(q,ans);
+  S.results.push({q:q,ok:ok,given:describe(q,ans),dt:dt});
+  updateBook(q,ok);
+  Array.prototype.forEach.call($('qFields').querySelectorAll('input'),function(i){i.readOnly=true;});
+  $('submitBtn').disabled=true;$('noneBtn').disabled=true;
+  const btns=$('qChoices').querySelectorAll('button');
+  Array.prototype.forEach.call(btns,function(b,i){
+    b.disabled=true;
+    if(ans.choice!==undefined){
+      if(M.check(q,{choice:i}))b.classList.add('right');
+      else if(i===ans.choice)b.classList.add('wrong');
+    }
+  });
+  const last=S.i===S.qs.length-1;
+  const over=dt>targetFor(q)?' · plus long que l’objectif ('+targetFor(q)+' s)':'';
+  if(ok){
+    $('feedback').innerHTML='<div class="fb ok"><p><strong>✓ Correct</strong> · '+dt.toFixed(1)+' s'+over+'</p></div>';
+    S.autoNext=setTimeout(next,700);
+  }else{
+    $('feedback').innerHTML='<div class="fb bad"><p><strong>✗ Pas tout à fait.</strong> Réponse attendue : <span class="math" style="font-size:1.1em">'+M.answer(q)+'</span></p>'
+      +'<div class="explain">'+M.explain(q)+'</div>'
+      +'<button type="button" class="btn primary" id="nextBtn">'+(last?'Voir le bilan':'Suivant →')+'</button></div>';
+    $('nextBtn').addEventListener('click',next);
+    $('nextBtn').focus();
+  }
+}
+function next(){
+  if(S.state!=='feedback')return;
+  clearTimeout(S.autoNext);
+  S.i++;
+  if(S.i>=S.qs.length)return endSession();
+  showQuestion();
+}
+
+/* ---------- Bilan ---------- */
+function endSession(){
+  clearInterval(S.timer);S.state='idle';
+  const n=S.results.length,score=S.results.filter(function(r){return r.ok;}).length;
+  const total=S.active,avg=total/n;
+  const avgTarget=S.qs.reduce(function(s,q){return s+targetFor(q);},0)/n;
+  const acc=Math.round(score/n*100);
+  if(S.kind==='normal'){
+    const h=store.get('hist',[]);
+    h.push({t:Date.now(),mode:S.meta.mode,level:S.meta.level,n:n,score:score,sec:Math.round(total)});
+    store.set('hist',h.slice(-60));
+  }
+  const title=S.kind==='book'?'Bilan du carnet d’erreurs':(S.kind==='retry'?'Bilan des erreurs refaites':'Bilan de la série');
+  $('resTitle').textContent=title;
+  $('resStats').innerHTML=
+    '<div class="stat"><b>'+score+' / '+n+'</b><span>bonnes réponses</span></div>'+
+    '<div class="stat"><b>'+acc+' %</b><span>précision</span></div>'+
+    '<div class="stat"><b>'+fmtTime(total)+'</b><span>temps total</span></div>'+
+    '<div class="stat"><b>'+avg.toFixed(0)+' s</b><span>par question (objectif ≈ '+Math.round(avgTarget)+' s)</span></div>';
+  let m;
+  if(acc===100&&avg<=avgTarget)m='Série juste et dans les temps. Tu peux passer au niveau au-dessus.';
+  else if(acc===100)m='Tout est juste. Prochain objectif : descendre vers '+Math.round(avgTarget)+' s par question.';
+  else if(acc>=80)m='Bonne précision. Reprends les erreurs ci-dessous, puis vise le temps.';
+  else m='Commence par la précision : refais les erreurs avant de chronométrer plus serré.';
+  $('resMsg').textContent=m;
+  const errs=S.results.filter(function(r){return !r.ok;});
+  $('resErrors').innerHTML=errs.length?'<h3>À retravailler ('+errs.length+')</h3>'+errs.map(function(r){
+    const M=MODES[r.q.m];
+    return '<div class="card err"><div>'+M.prompt(r.q)+'</div>'
+      +'<p style="margin:6px 0 0">Ta réponse : '+esc(r.given)+'<br>Attendu : <span class="math" style="font-size:1.05em">'+M.answer(r.q)+'</span></p>'
+      +'<details><summary>Voir la méthode</summary><div class="explain">'+M.explain(r.q)+'</div></details></div>';
+  }).join(''):'';
+  const act=$('resActions');act.innerHTML='';
+  function btn(label,cls,fn){const b=document.createElement('button');b.type='button';b.className='btn '+cls;b.textContent=label;b.addEventListener('click',fn);act.appendChild(b);}
+  if(errs.length)btn('Refaire les erreurs','primary',function(){begin('retry',errs.map(function(r){return JSON.parse(JSON.stringify(r.q));}),{});});
+  if(S.kind==='normal')btn('Nouvelle série','',function(){begin('normal',makeQuestions(S.meta.mode,S.meta.level,S.qs.length),S.meta);});
+  btn('Copier le bilan','ghost',function(){
+    const label=S.kind==='normal'?(S.meta.mode==='mixte'?'Mixte':MODES[S.meta.mode].label)+' ('+LEVELS[S.meta.level].label.toLowerCase()+')':title;
+    const text='Second degré · '+label+' : '+score+'/'+n+' · '+fmtTime(total)+' · '+avg.toFixed(0)+' s par question';
+    const done=function(){alert('Bilan copié.');};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,function(){window.prompt('Copie ce texte :',text);});
+    else window.prompt('Copie ce texte :',text);
+  });
+  btn('Accueil','ghost',goHome);
+  show('results');
+  updateBookBtn();
+}
+
+/* ---------- Progression ---------- */
+function showProgress(){
+  const h=store.get('hist',[]),book=store.get('book',[]);
+  let html='';
+  if(!h.length){html+='<p class="lead">Pas encore de série enregistrée. Fais une première série pour voir ta progression ici.</p>';}
+  else{
+    const nQ=h.reduce(function(s,x){return s+x.n;},0),ok=h.reduce(function(s,x){return s+x.score;},0),sec=h.reduce(function(s,x){return s+x.sec;},0);
+    html+='<div class="stats">'
+      +'<div class="stat"><b>'+h.length+'</b><span>séries</span></div>'
+      +'<div class="stat"><b>'+nQ+'</b><span>questions</span></div>'
+      +'<div class="stat"><b>'+Math.round(ok/nQ*100)+' %</b><span>précision globale</span></div>'
+      +'<div class="stat"><b>'+(sec/nQ).toFixed(0)+' s</b><span>par question</span></div></div>';
+    html+='<h3>Par type d’entraînement</h3><div class="tablewrap"><table><thead><tr><th>Type</th><th>Séries</th><th>Précision</th><th>Temps / question</th></tr></thead><tbody>';
+    const groups={};
+    h.forEach(function(x){const g=groups[x.mode]||(groups[x.mode]={n:0,q:0,ok:0,sec:0});g.n++;g.q+=x.n;g.ok+=x.score;g.sec+=x.sec;});
+    Object.keys(groups).forEach(function(k){
+      const g=groups[k];
+      html+='<tr><td>'+(k==='mixte'?'Mixte':(MODES[k]?MODES[k].label:esc(k)))+'</td><td>'+g.n+'</td><td>'+Math.round(g.ok/g.q*100)+' %</td><td>'+(g.sec/g.q).toFixed(0)+' s</td></tr>';
+    });
+    html+='</tbody></table></div>';
+    html+='<h3>Dernières séries</h3><div class="tablewrap"><table><thead><tr><th>Date</th><th>Type</th><th>Niveau</th><th>Score</th><th>Temps</th></tr></thead><tbody>';
+    h.slice(-10).reverse().forEach(function(x){
+      html+='<tr><td>'+new Date(x.t).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})+'</td><td>'+(x.mode==='mixte'?'Mixte':(MODES[x.mode]?MODES[x.mode].label:esc(x.mode)))+'</td><td>'+(LEVELS[x.level]?LEVELS[x.level].label:'')+'</td><td>'+x.score+'/'+x.n+'</td><td>'+fmtTime(x.sec)+'</td></tr>';
+    });
+    html+='</tbody></table></div>';
+  }
+  html+='<h3>Carnet d’erreurs</h3>';
+  if(!book.length)html+='<p class="lead">Le carnet est vide.</p>';
+  else{
+    const c={};book.forEach(function(e){c[e.q.m]=(c[e.q.m]||0)+1;});
+    html+='<p>'+book.length+' question'+(book.length>1?'s':'')+' à retravailler : '+Object.keys(c).map(function(k){return MODES[k].label.toLowerCase()+' ('+c[k]+')';}).join(', ')+'.</p>'
+      +'<div class="row"><button class="btn primary" id="progBook" type="button">Travailler le carnet</button></div>';
+  }
+  $('progBody').innerHTML=html;
+  const pb=$('progBook');if(pb)pb.addEventListener('click',startBook);
+  show('progress');
+}
+function goHome(){clearInterval(S.timer);clearTimeout(S.autoNext);S.state='idle';updateBookBtn();show('home');}
+
+/* ---------- Événements ---------- */
+$('startBtn').addEventListener('click',startNormal);
+$('bookBtn').addEventListener('click',startBook);
+$('progBtn').addEventListener('click',showProgress);
+$('brandBtn').addEventListener('click',function(){if(!$('quiz').hidden&&S.state!=='idle'&&!confirm('Quitter la série en cours ?'))return;goHome();});
+$('progHome').addEventListener('click',goHome);
+$('progReset').addEventListener('click',function(){if(confirm('Effacer tout l’historique et le carnet d’erreurs ?')){store.set('hist',[]);store.set('book',[]);showProgress();updateBookBtn();}});
+$('quitBtn').addEventListener('click',function(){if(confirm('Quitter la série en cours ? Les réponses déjà données ne seront pas enregistrées dans l’historique.'))goHome();});
+$('levelSeg').addEventListener('change',updateHint);
+$('qForm').addEventListener('submit',submitFields);
+$('noneBtn').addEventListener('click',function(){finish({none:true,vals:['','']});});
+$('qChoices').addEventListener('click',function(e){const b=e.target.closest('button.choice');if(b&&S.state==='answering')finish({choice:parseInt(b.dataset.i,10)});});
+$('qFields').addEventListener('input',function(){$('formMsg').textContent='';});
+$('qFields').addEventListener('focusin',function(e){if(e.target.tagName==='INPUT')S.lastInput=e.target;});
+$('qFields').addEventListener('keydown',function(e){
+  if(e.key!=='Enter')return;
+  const inputs=Array.prototype.slice.call($('qFields').querySelectorAll('input')),i=inputs.indexOf(e.target);
+  if(i>=0&&i<inputs.length-1&&inputs[i+1].value===''){e.preventDefault();inputs[i+1].focus();}
+});
+$('keys').addEventListener('mousedown',function(e){e.preventDefault();});
+$('keys').addEventListener('click',function(e){
+  const b=e.target.closest('button');const inp=S.lastInput;
+  if(!b||!inp||inp.readOnly||!document.body.contains(inp))return;
+  const k=b.dataset.k,s=inp.selectionStart==null?inp.value.length:inp.selectionStart,t=inp.selectionEnd==null?s:inp.selectionEnd;
+  inp.value=inp.value.slice(0,s)+k+inp.value.slice(t);inp.focus();inp.setSelectionRange(s+k.length,s+k.length);
+});
+document.addEventListener('keydown',function(e){
+  if(S.state==='feedback'&&e.key==='Enter'&&!$('quiz').hidden){e.preventDefault();next();return;}
+  if(S.state==='answering'&&!$('quiz').hidden&&/^[1-4]$/.test(e.key)&&!$('qChoices').hidden&&$('qChoices').children.length&&!document.activeElement.matches('input')){
+    const b=$('qChoices').children[parseInt(e.key,10)-1];if(b)b.click();
+  }
+});
+
+buildHome();
+// ==EXPOSE==
+})();
+</script>
+</body>
+</html>
