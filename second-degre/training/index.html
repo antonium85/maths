@@ -267,9 +267,9 @@ function eqNum(p,f){
 }
 
 const LEVELS={
-  facile:{label:'Facile',desc:'Coefficient a = 1, nombres entiers.',mult:0.8,aList:[1],b:[-8,8],c:[-8,8],leads:[1],rational:false,roots:[-6,7]},
-  moyen:{label:'Moyen',desc:'Coefficient a entre −3 et 3, racines entières.',mult:1,aList:[1,-1,2,-2,3,-3],b:[-9,9],c:[-9,9],leads:[1,-1,2,-2,3,-3],rational:false,roots:[-8,8]},
-  difficile:{label:'Difficile',desc:'Racines fractionnaires, coefficients plus grands.',mult:1.3,aList:[1,-1,2,-2,3,-3,4,-4,5,-5],b:[-12,12],c:[-12,12],leads:[1,1,-1,-1,2,-2],rational:true,roots:[-7,7]}
+  facile:{label:'Facile',desc:'Coefficient a = 1, nombres entiers.',aList:[1],b:[-8,8],c:[-8,8],leads:[1],rational:false,roots:[-6,7]},
+  moyen:{label:'Moyen',desc:'Coefficient a entre −3 et 3, racines entières.',aList:[1,-1,2,-2,3,-3],b:[-9,9],c:[-9,9],leads:[1,-1,2,-2,3,-3],rational:false,roots:[-8,8]},
+  difficile:{label:'Difficile',desc:'Racines fractionnaires, coefficients plus grands.',aList:[1,-1,2,-2,3,-3,4,-4,5,-5],b:[-12,12],c:[-12,12],leads:[1,1,-1,-1,2,-2],rational:true,roots:[-7,7]}
 };
 const OPS=[
   {s:'≥',h:'≥',strict:false,pos:true},
@@ -330,7 +330,7 @@ function explainRoots(q){
 const MODE_KEYS=['disc','nsol','roots','sp','obv','vertex','sign'];
 const MODES={
   disc:{
-    label:'Discriminant',desc:'Calculer Δ = b² − 4ac sans se tromper de signe.',target:15,
+    label:'Discriminant',desc:'Calculer Δ = b² − 4ac sans se tromper de signe.',target:{facile:30,moyen:35,difficile:40},
     gen(L){let b=rnd(L.b[0],L.b[1]);if(b===0)b=pick([-1,1])*rnd(1,L.b[1]);return {m:'disc',a:pick(L.aList),b:b,c:rnd(L.c[0],L.c[1])};},
     prompt:q=>'Calcule le discriminant de <span class="math">'+polyStr(q.a,q.b,q.c)+'</span>',
     fields:()=>[{label:'Δ ='}],
@@ -340,7 +340,7 @@ const MODES={
     explain:q=>'Δ = b² − 4ac = '+par(q.b)+'² − 4 × '+par(q.a)+' × '+par(q.c)+' = '+(q.b*q.b)+' − '+par(4*q.a*q.c)+' = <strong>'+fmtInt(disc(q.a,q.b,q.c))+'</strong>'
   },
   nsol:{
-    label:'Nombre de solutions',desc:'Lire le signe de Δ : 0, 1 ou 2 solutions ?',target:20,
+    label:'Nombre de solutions',desc:'Lire le signe de Δ : 0, 1 ou 2 solutions ?',target:{facile:30,moyen:35,difficile:40},
     gen(L){
       const k=pick([0,1,2]);let p;
       if(k===0)p=noRoots(L);
@@ -361,7 +361,7 @@ const MODES={
     }
   },
   roots:{
-    label:'Résoudre',desc:'Trouver les racines, ou constater qu’il n’y en a pas.',target:45,hasNone:true,
+    label:'Résoudre',desc:'Trouver les racines, ou constater qu’il n’y en a pas.',target:{facile:45,moyen:75,difficile:90},hasNone:true,
     gen(L){
       const r=Math.random();
       if(r<0.18){const p=noRoots(L);return {m:'roots',a:p.a,b:p.b,c:p.c,nr:0,roots:[]};}
@@ -384,7 +384,7 @@ const MODES={
     explain:q=>explainRoots(q)
   },
   sp:{
-    label:'Somme et produit',desc:'Trouver S = x₁ + x₂ et P = x₁ × x₂ sans résoudre.',target:30,needAll:true,
+    label:'Somme et produit',desc:'Trouver S = x₁ + x₂ et P = x₁ × x₂ sans résoudre.',target:{facile:25,moyen:30,difficile:40},needAll:true,
     gen(L){const p=twoRoots(L,'distinct');return {m:'sp',a:p.a,b:p.b,c:p.c};},
     prompt:q=>'L’équation <span class="math">'+polyStr(q.a,q.b,q.c)+' = 0</span> a deux racines x₁ et x₂. Sans la résoudre, donne leur somme S et leur produit P.',
     fields:()=>[{label:'S = x₁ + x₂'},{label:'P = x₁ × x₂'}],
@@ -394,7 +394,7 @@ const MODES={
     explain:q=>'S = −b/a = −'+par(q.b)+' / '+par(q.a)+' = <strong>'+fmtF(F(-q.b,q.a))+'</strong>.<br>P = c/a = '+par(q.c)+' / '+par(q.a)+' = <strong>'+fmtF(F(q.c,q.a))+'</strong>.'
   },
   obv:{
-    label:'Racine évidente',desc:'Repérer 1 ou −1, puis déduire l’autre racine avec le produit.',target:30,needAll:true,
+    label:'Racine évidente',desc:'Repérer 1 ou −1, puis déduire l’autre racine avec le produit.',target:{facile:20,moyen:25,difficile:30},needAll:true,
     gen(L){
       for(;;){
         const a=pick(L.aList),b=rnd(L.b[0],L.b[1]);
@@ -423,7 +423,7 @@ const MODES={
     }
   },
   vertex:{
-    label:'Sommet et forme canonique',desc:'Calculer α = −b/(2a) et β = f(α).',target:45,needAll:true,
+    label:'Sommet et forme canonique',desc:'Calculer α = −b/(2a) et β = f(α).',target:{facile:40,moyen:60,difficile:90},needAll:true,
     gen(L,lvl){
       let a,b,c;
       if(L.rational){
@@ -447,7 +447,7 @@ const MODES={
     }
   },
   sign:{
-    label:'Signe et inéquations',desc:'Résoudre ax² + bx + c ≥ 0 (ou >, ≤, <) : choisir le bon intervalle.',target:50,
+    label:'Signe et inéquations',desc:'Résoudre ax² + bx + c ≥ 0 (ou >, ≤, <) : choisir le bon intervalle.',target:{facile:50,moyen:80,difficile:95},
     gen(L){
       const t=twoRoots(L,'distinct');
       const op=pick(OPS);
@@ -483,7 +483,7 @@ const MODES={
     }
   }
 };
-function targetFor(q){return Math.round(MODES[q.m].target*LEVELS[q.level||'moyen'].mult);}
+function targetFor(q){return MODES[q.m].target[q.level||'moyen'];}
 /* ==LOGIC-END== */
 
 /* ------------------------------------------------------------------ */
@@ -515,10 +515,10 @@ function setChecked(name,val){const e=document.querySelector('input[name="'+name
 
 /* ---------- Accueil ---------- */
 function buildHome(){
-  const items=MODE_KEYS.map(function(k){return {k:k,label:MODES[k].label,desc:MODES[k].desc,t:MODES[k].target};});
+  const items=MODE_KEYS.map(function(k){return {k:k,label:MODES[k].label,desc:MODES[k].desc,t:true};});
   items.push({k:'mixte',label:'Mixte',desc:'Un peu de tout, dans le désordre : le plus proche d’un contrôle.',t:null});
   $('modeGrid').innerHTML=items.map(function(it){
-    return '<label class="mode"><input type="radio" name="mode" value="'+it.k+'"><span class="mbody"><strong>'+it.label+'</strong><small>'+it.desc+'</small><em>'+(it.t?'Objectif ≈ '+it.t+' s par question':'Objectif selon la question')+'</em></span></label>';
+    return '<label class="mode"><input type="radio" name="mode" value="'+it.k+'"><span class="mbody"><strong>'+it.label+'</strong><small>'+it.desc+'</small><em'+(it.t?' data-t="'+it.k+'">':'>')+(it.t?'':'Objectif selon la question')+'</em></span></label>';
   }).join('');
   const prefs=store.get('prefs',{});
   const qp=new URLSearchParams(location.search);
@@ -531,7 +531,8 @@ function buildHome(){
   updateHint();updateBookBtn();
   $('storeNote').hidden=store.ok;
 }
-function updateHint(){const l=checked('level');$('levelHint').textContent=LEVELS[l].desc+' Objectifs de temps '+(l==='facile'?'plus courts.':(l==='difficile'?'plus longs.':'standard.'));}
+function updateHint(){const l=checked('level');$('levelHint').textContent=LEVELS[l].desc+' Objectifs de temps '+(l==='facile'?'plus courts.':(l==='difficile'?'plus longs.':'standard.'));
+  document.querySelectorAll('#modeGrid em[data-t]').forEach(function(e){e.textContent='Objectif : '+MODES[e.dataset.t].target[l]+' s par question';});}
 function updateBookBtn(){const n=store.get('book',[]).length;$('bookBtn').textContent='Carnet d’erreurs ('+n+')';$('bookBtn').disabled=n===0;}
 
 function makeQuestions(mode,level,n){
@@ -657,7 +658,7 @@ function finish(ans){
   const over=dt>targetFor(q)?' · plus long que l’objectif ('+targetFor(q)+' s)':'';
   if(ok){
     $('feedback').innerHTML='<div class="fb ok"><p><strong>✓ Correct</strong> · '+dt.toFixed(1)+' s'+over+'</p></div>';
-    S.autoNext=setTimeout(next,700);
+    S.autoNext=setTimeout(next,1500);
   }else{
     $('feedback').innerHTML='<div class="fb bad"><p><strong>✗ Pas tout à fait.</strong> Réponse attendue : <span class="math" style="font-size:1.1em">'+M.answer(q)+'</span></p>'
       +'<div class="explain">'+M.explain(q)+'</div>'
