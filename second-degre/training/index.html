@@ -40,6 +40,7 @@ h1:focus,h2:focus{outline:none}
 .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .btn.primary:hover{filter:brightness(1.08)}
 .btn.ghost{background:transparent}
+.btn.confirm{color:var(--warn);border-color:var(--warn)}
 .btn.small{min-height:36px;padding:6px 12px;font-size:.9rem}
 .btn.big{width:100%;font-size:1.1rem;min-height:52px}
 .btn[disabled]{opacity:.55;cursor:not-allowed}
@@ -760,16 +761,23 @@ function showProgress(){
   const pb=$('progBook');if(pb)pb.addEventListener('click',startBook);
   show('progress');
 }
-function goHome(){clearInterval(S.timer);clearTimeout(S.autoNext);S.state='idle';updateBookBtn();show('home');}
+/* Confirmation en deux clics dans la page : confirm() est bloqué dans certains contextes (iframe, dialogues désactivés). */
+function confirmClick(btn,label,action){
+  if(btn.dataset.armed){disarm(btn);action();return;}
+  btn.dataset.armed='1';btn.dataset.label=btn.textContent;btn.textContent=label;btn.classList.add('confirm');
+  btn._t=setTimeout(function(){disarm(btn);},3000);
+}
+function disarm(btn){if(!btn.dataset.armed)return;clearTimeout(btn._t);btn.textContent=btn.dataset.label;delete btn.dataset.armed;btn.classList.remove('confirm');}
+function goHome(){disarm($('quitBtn'));clearInterval(S.timer);clearTimeout(S.autoNext);S.state='idle';updateBookBtn();show('home');}
 
 /* ---------- Événements ---------- */
 $('startBtn').addEventListener('click',startNormal);
 $('bookBtn').addEventListener('click',startBook);
 $('progBtn').addEventListener('click',showProgress);
-$('brandBtn').addEventListener('click',function(){if(!$('quiz').hidden&&S.state!=='idle'&&!confirm('Quitter la série en cours ?'))return;goHome();});
+$('brandBtn').addEventListener('click',function(){if(!$('quiz').hidden&&S.state!=='idle')confirmClick($('quitBtn'),'Confirmer ?',goHome);else goHome();});
 $('progHome').addEventListener('click',goHome);
-$('progReset').addEventListener('click',function(){if(confirm('Effacer tout l’historique et le carnet d’erreurs ?')){store.set('hist',[]);store.set('book',[]);showProgress();updateBookBtn();}});
-$('quitBtn').addEventListener('click',function(){if(confirm('Quitter la série en cours ? Les réponses déjà données ne seront pas enregistrées dans l’historique.'))goHome();});
+$('progReset').addEventListener('click',function(){confirmClick(this,'Confirmer l’effacement ?',function(){store.set('hist',[]);store.set('book',[]);showProgress();updateBookBtn();});});
+$('quitBtn').addEventListener('click',function(){confirmClick(this,'Confirmer ?',goHome);});
 $('levelSeg').addEventListener('change',updateHint);
 $('qForm').addEventListener('submit',submitFields);
 $('noneBtn').addEventListener('click',function(){finish({none:true,vals:['','']});});

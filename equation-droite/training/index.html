@@ -40,6 +40,7 @@ h1:focus,h2:focus,#qPrompt:focus{outline:none}
 .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .btn.primary:hover{filter:brightness(1.08)}
 .btn.ghost{background:transparent}
+.btn.confirm{color:var(--warn);border-color:var(--warn)}
 .btn.small{min-height:36px;padding:6px 12px;font-size:.9rem}
 .btn.big{width:100%;font-size:1.1rem;min-height:52px}
 .btn[disabled]{opacity:.55;cursor:not-allowed}
@@ -288,9 +289,9 @@ function normLine(l){
 }
 
 const LEVELS={
-  facile:{label:'Facile',desc:'Rappels de Seconde : équation réduite, coefficients entiers, petits nombres.',mult:0.8},
-  moyen:{label:'Moyen',desc:'Niveau Première : équation cartésienne, vecteurs directeur et normal, perpendiculaires, droites verticales et horizontales.',mult:1},
-  difficile:{label:'Difficile',desc:'Fractions et calculs plus longs, médiatrices, parallèles et perpendiculaires en forme cartésienne.',mult:1.3}
+  facile:{label:'Facile',desc:'Rappels de Seconde : équation réduite, coefficients entiers, petits nombres.'},
+  moyen:{label:'Moyen',desc:'Niveau Première : équation cartésienne, vecteurs directeur et normal, perpendiculaires, droites verticales et horizontales.'},
+  difficile:{label:'Difficile',desc:'Fractions et calculs plus longs, médiatrices, parallèles et perpendiculaires en forme cartésienne.'}
 };
 Object.keys(LEVELS).forEach(function(k){LEVELS[k].key=k;});
 
@@ -349,7 +350,7 @@ const MODES={
 
   /* ---------- Lire m et p ---------- */
   read:mode({
-    label:'Lire m et p',desc:'Repérer le coefficient directeur et l’ordonnée à l’origine, même quand l’équation n’est pas réduite.',target:20,
+    label:'Lire m et p',desc:'Repérer le coefficient directeur et l’ordonnée à l’origine, même quand l’équation n’est pas réduite.',target:{facile:15,moyen:25,difficile:30},
     gen(L){
       const lv=L.key,r=Math.random();
       let form,sl,ic,a=0,b=0,c=0;
@@ -400,7 +401,7 @@ const MODES={
 
   /* ---------- Point sur la droite ---------- */
   point:mode({
-    label:'Point sur la droite',desc:'Tester si un point appartient à la droite : y = mx + p.',target:25,
+    label:'Point sur la droite',desc:'Tester si un point appartient à la droite : y = mx + p.',target:{facile:25,moyen:35,difficile:40},
     gen(L){
       const sl=randSlope(L),d=sl[1],ic=fi(rnd(-6,6));
       const val=Math.random()<0.35;
@@ -438,7 +439,7 @@ const MODES={
 
   /* ---------- Coefficient directeur par deux points ---------- */
   slope:mode({
-    label:'Coefficient directeur',desc:'Calculer m = Δy / Δx à partir de deux points.',target:30,
+    label:'Coefficient directeur',desc:'Calculer m = Δy / Δx à partir de deux points.',target:{facile:20,moyen:30,difficile:40},
     gen(L){
       const lv=L.key;
       let xA=1,yA=2,xB=3,yB=6;
@@ -472,7 +473,7 @@ const MODES={
 
   /* ---------- Équation avec un point et m ---------- */
   pm:mode({
-    label:'Équation avec un point et m',desc:'Trouver p quand on connaît le coefficient directeur et un point.',target:40,
+    label:'Équation avec un point et m',desc:'Trouver p quand on connaît le coefficient directeur et un point.',target:{facile:30,moyen:40,difficile:60},
     gen(L){
       const lv=L.key;
       const sl=randSlope(L),d=sl[1];
@@ -502,7 +503,7 @@ const MODES={
 
   /* ---------- Droite passant par deux points ---------- */
   eq2pts:mode({
-    label:'Droite passant par deux points',desc:'Équation réduite de (AB), y compris les droites verticales et horizontales.',target:50,
+    label:'Droite passant par deux points',desc:'Équation réduite de (AB), y compris les droites verticales et horizontales.',target:{facile:40,moyen:50,difficile:75},
     gen(L){
       const lv=L.key;
       const spP=lv==='facile'?0:(lv==='moyen'?0.18:0.22);
@@ -559,7 +560,7 @@ const MODES={
 
   /* ---------- Lecture graphique ---------- */
   graph:mode({
-    label:'Lecture graphique',desc:'Retrouver l’équation d’une droite tracée dans un repère.',target:35,
+    label:'Lecture graphique',desc:'Retrouver l’équation d’une droite tracée dans un repère.',target:{facile:30,moyen:35,difficile:45},
     gen(L){
       let sl=fi(1),ic=fi(0),pts=[[0,0],[1,1]];
       for(let t=0;t<300;t++){
@@ -587,7 +588,7 @@ const MODES={
 
   /* ---------- Parallèles et perpendiculaires ---------- */
   para:mode({
-    label:'Parallèles et perpendiculaires',desc:'Comparer les directions de deux droites.',target:35,
+    label:'Parallèles et perpendiculaires',desc:'Comparer les directions de deux droites.',target:{facile:20,moyen:40,difficile:45},
     gen(L){
       const lv=L.key,r=Math.random();
       let kind;
@@ -638,7 +639,7 @@ const MODES={
 
   /* ---------- Vecteurs et équation cartésienne ---------- */
   vect:mode({
-    label:'Vecteurs et équation cartésienne',desc:'Vecteur directeur, vecteur normal, passage de y = mx + p à ax + by + c = 0.',target:45,
+    label:'Vecteurs et équation cartésienne',desc:'Vecteur directeur, vecteur normal, passage de y = mx + p à ax + by + c = 0.',target:{facile:35,moyen:45,difficile:60},
     gen(L){
       const lv=L.key,R=lv==='facile'?3:(lv==='moyen'?5:7);
       const r=Math.random();
@@ -709,7 +710,7 @@ const MODES={
 
   /* ---------- Construire une équation cartésienne ---------- */
   cons:mode({
-    label:'Construire une équation cartésienne',desc:'À partir d’un vecteur normal, de deux points, d’une médiatrice, d’une parallèle ou d’une perpendiculaire.',target:55,
+    label:'Construire une équation cartésienne',desc:'À partir d’un vecteur normal, de deux points, d’une médiatrice, d’une parallèle ou d’une perpendiculaire.',target:{facile:50,moyen:60,difficile:75},
     gen(L){
       const lv=L.key,R=lv==='facile'?3:(lv==='moyen'?4:6);
       const kind=pick(['normal','ab','med','parA','perpA']);
@@ -777,7 +778,7 @@ const MODES={
 
   /* ---------- Intersection de deux droites ---------- */
   inter:mode({
-    label:'Intersection de deux droites',desc:'Résoudre m₁x + p₁ = m₂x + p₂, puis calculer y.',target:60,
+    label:'Intersection de deux droites',desc:'Résoudre m₁x + p₁ = m₂x + p₂, puis calculer y.',target:{facile:45,moyen:60,difficile:75},
     gen(L){
       const lv=L.key;
       const pool=lv==='facile'?[1,-1,2,-2,3,-3].map(fi):(lv==='moyen'?[1,-1,2,-2,3,-3,4,-4].map(fi):[fi(1),fi(-1),fi(2),fi(-2),fi(3),fi(-3),F(1,2),F(-1,2),F(3,2),F(-3,2),F(1,2),F(-1,2)]);
@@ -806,7 +807,7 @@ const MODES={
     }
   })
 };
-function targetFor(q){return Math.round(MODES[q.m].target*LEVELS[q.level||'moyen'].mult);}
+function targetFor(q){return MODES[q.m].target[q.level||'moyen'];}
 function qKey(q){return JSON.stringify(q,function(k,v){return (k==='opts'||k==='correct')?undefined:v;});}
 /* ==LOGIC-END== */
 
@@ -839,10 +840,10 @@ function setChecked(name,val){const e=document.querySelector('input[name="'+name
 
 /* ---------- Accueil ---------- */
 function buildHome(){
-  const items=MODE_KEYS.map(function(k){return {k:k,label:MODES[k].label,desc:MODES[k].desc,t:MODES[k].target};});
+  const items=MODE_KEYS.map(function(k){return {k:k,label:MODES[k].label,desc:MODES[k].desc,t:true};});
   items.push({k:'mixte',label:'Mixte',desc:'Un peu de tout, dans le désordre : le plus proche d’un contrôle.',t:null});
   $('modeGrid').innerHTML=items.map(function(it){
-    return '<label class="mode"><input type="radio" name="mode" value="'+it.k+'"><span class="mbody"><strong>'+it.label+'</strong><small>'+it.desc+'</small><em>'+(it.t?'Objectif ≈ '+it.t+' s par question':'Objectif selon la question')+'</em></span></label>';
+    return '<label class="mode"><input type="radio" name="mode" value="'+it.k+'"><span class="mbody"><strong>'+it.label+'</strong><small>'+it.desc+'</small><em'+(it.t?' data-t="'+it.k+'">':'>')+(it.t?'':'Objectif selon la question')+'</em></span></label>';
   }).join('');
   const prefs=store.get('prefs',{});
   const qp=new URLSearchParams(location.search);
@@ -855,7 +856,8 @@ function buildHome(){
   updateHint();updateBookBtn();
   $('storeNote').hidden=store.ok;
 }
-function updateHint(){const l=checked('level');$('levelHint').textContent=LEVELS[l].desc+' Objectifs de temps '+(l==='facile'?'plus courts.':(l==='difficile'?'plus longs.':'standard.'));}
+function updateHint(){const l=checked('level');$('levelHint').textContent=LEVELS[l].desc+' Objectifs de temps '+(l==='facile'?'plus courts.':(l==='difficile'?'plus longs.':'standard.'));
+  document.querySelectorAll('#modeGrid em[data-t]').forEach(function(e){e.textContent='Objectif : '+MODES[e.dataset.t].target[l]+' s par question';});}
 function updateBookBtn(){const n=store.get('book',[]).length;$('bookBtn').textContent='Carnet d’erreurs ('+n+')';$('bookBtn').disabled=n===0;}
 
 function makeQuestions(mode,level,n){
@@ -943,7 +945,7 @@ function finish(ans){
   const over=dt>targetFor(q)?' · plus long que l’objectif ('+targetFor(q)+' s)':'';
   if(ok){
     $('feedback').innerHTML='<div class="fb ok"><p><strong>✓ Correct</strong> · '+dt.toFixed(1)+' s'+over+'</p></div>';
-    S.autoNext=setTimeout(next,700);
+    S.autoNext=setTimeout(next,1500);
   }else{
     $('feedback').innerHTML='<div class="fb bad"><p><strong>✗ Pas tout à fait.</strong> Bonne réponse : <span class="math" style="font-size:1.1em">'+M.answer(q)+'</span></p>'
       +'<div class="explain">'+M.explain(q)+'</div>'
@@ -1045,16 +1047,23 @@ function showProgress(){
   const pb=$('progBook');if(pb)pb.addEventListener('click',startBook);
   show('progress');
 }
-function goHome(){clearInterval(S.timer);clearTimeout(S.autoNext);S.state='idle';updateBookBtn();show('home');}
+/* Confirmation en deux clics dans la page : confirm() est bloqué dans certains contextes (iframe, dialogues désactivés). */
+function confirmClick(btn,label,action){
+  if(btn.dataset.armed){disarm(btn);action();return;}
+  btn.dataset.armed='1';btn.dataset.label=btn.textContent;btn.textContent=label;btn.classList.add('confirm');
+  btn._t=setTimeout(function(){disarm(btn);},3000);
+}
+function disarm(btn){if(!btn.dataset.armed)return;clearTimeout(btn._t);btn.textContent=btn.dataset.label;delete btn.dataset.armed;btn.classList.remove('confirm');}
+function goHome(){disarm($('quitBtn'));clearInterval(S.timer);clearTimeout(S.autoNext);S.state='idle';updateBookBtn();show('home');}
 
 /* ---------- Événements ---------- */
 $('startBtn').addEventListener('click',startNormal);
 $('bookBtn').addEventListener('click',startBook);
 $('progBtn').addEventListener('click',showProgress);
-$('brandBtn').addEventListener('click',function(){if(!$('quiz').hidden&&S.state!=='idle'&&!confirm('Quitter la série en cours ?'))return;goHome();});
+$('brandBtn').addEventListener('click',function(){if(!$('quiz').hidden&&S.state!=='idle')confirmClick($('quitBtn'),'Confirmer ?',goHome);else goHome();});
 $('progHome').addEventListener('click',goHome);
-$('progReset').addEventListener('click',function(){if(confirm('Effacer tout l’historique et le carnet d’erreurs ?')){store.set('hist',[]);store.set('book',[]);showProgress();updateBookBtn();}});
-$('quitBtn').addEventListener('click',function(){if(confirm('Quitter la série en cours ? Les réponses déjà données ne seront pas enregistrées dans l’historique.'))goHome();});
+$('progReset').addEventListener('click',function(){confirmClick(this,'Confirmer l’effacement ?',function(){store.set('hist',[]);store.set('book',[]);showProgress();updateBookBtn();});});
+$('quitBtn').addEventListener('click',function(){confirmClick(this,'Confirmer ?',goHome);});
 $('levelSeg').addEventListener('change',updateHint);
 $('qChoices').addEventListener('click',function(e){const b=e.target.closest('button.choice');if(b&&S.state==='answering')finish({choice:parseInt(b.dataset.i,10)});});
 document.addEventListener('keydown',function(e){
