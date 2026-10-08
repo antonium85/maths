@@ -110,6 +110,23 @@ th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-
 th{color:var(--muted);font-weight:600;font-size:.85rem}
 tr:last-child td{border-bottom:0}
 .tablewrap{overflow-x:auto}
+/* Correction des inéquations : tableau de signes et allure de la parabole */
+.stab{width:auto;min-width:100%;margin:8px 0;font-family:var(--math);font-size:1.05rem}
+.stab th,.stab td{text-align:center;padding:6px 8px;border-bottom:1px solid var(--line);color:var(--text);font-weight:400}
+.stab tr:last-child th,.stab tr:last-child td{border-bottom:0}
+.stab th{font-style:italic;font-size:1.05rem;text-align:left;border-right:1px solid var(--line)}
+.stab td.z{border-left:1px solid var(--line);border-right:1px solid var(--line);min-width:2.2em}
+.stab td.sel{background:var(--ok-soft);color:var(--ok);font-weight:700}
+.sgraph{display:block;width:100%;max-width:320px;height:auto;margin:10px auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.err .sgraph{max-width:240px;margin-left:0}
+.sgraph .ga{stroke:var(--muted);stroke-width:1.4}
+.sgraph text{fill:var(--text);font:12px var(--math)}
+.sgraph .cin{fill:none;stroke:var(--ok);stroke-width:3;stroke-linejoin:round}
+.sgraph .cout{fill:none;stroke:var(--muted);stroke-width:1.6;stroke-dasharray:5 4}
+.sgraph .sol{stroke:var(--ok);stroke-width:6;stroke-linecap:round;opacity:.45}
+.sgraph .shut{fill:var(--ok)}
+.sgraph .open{fill:var(--surface);stroke:var(--ok);stroke-width:2}
+.explain p{margin:0 0 8px}
 .note{color:var(--muted);font-size:.85rem;margin-top:28px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -335,6 +352,64 @@ function explainRoots(q){
   return t;
 }
 
+/* Tableau de signes du trinôme : les cases qui vérifient l'inéquation sont surlignées. */
+function signTable(q,op){
+  const pos=q.a>0;
+  const ext=pos?'+':MINUS,int=pos?MINUS:'+';
+  const want=function(s){return op.pos?s==='+':s===MINUS;};
+  const cell=function(s){return '<td class="'+(want(s)?'sel':'')+'">'+s+'</td>';};
+  const zero='<td class="z'+(op.strict?'':' sel')+'">0</td>';
+  return '<div class="tablewrap"><table class="stab"><tbody>'
+    +'<tr><th>x</th><td>'+MINUS+'∞</td><td class="z"></td><td class="z">'+fmtF(q.r1)+'</td><td class="z"></td><td class="z">'+fmtF(q.r2)+'</td><td class="z"></td><td>+∞</td></tr>'
+    +'<tr><th>f(x)</th><td></td>'+cell(ext)+zero+cell(int)+zero+cell(ext)+'<td></td></tr>'
+    +'</tbody></table></div>';
+}
+
+/* Allure de la parabole : en couleur, la partie de la courbe et de l'axe des abscisses qui vérifie l'inéquation. */
+function signGraph(q,op){
+  const W=300,H=170,P=14;
+  const x1=q.r1[0]/q.r1[1],x2=q.r2[0]/q.r2[1],w=x2-x1;
+  const xmin=x1-0.7*w,xmax=x2+0.7*w;
+  const f=function(x){return q.a*x*x+q.b*x+q.c;};
+  const yv=f((x1+x2)/2),ye=f(xmin);
+  const ylo=Math.min(yv,ye,0),yhi=Math.max(yv,ye,0),span=(yhi-ylo)||1;
+  const X=function(x){return P+(x-xmin)/(xmax-xmin)*(W-2*P);};
+  const Y=function(y){return P+(yhi-y)/span*(H-2*P-16);};
+  const ok=function(x){const v=f(x);return op.pos?v>0:v<0;};
+  let g='<line class="ga" x1="'+P/2+'" y1="'+Y(0)+'" x2="'+(W-P/2)+'" y2="'+Y(0)+'"/>';
+  /* Courbe découpée en morceaux : en couleur où l'inéquation est vérifiée. */
+  const N=120;let seg=[],cur=null;
+  for(let i=0;i<=N;i++){
+    const x=xmin+(xmax-xmin)*i/N,s=ok(x);
+    if(cur!==s&&seg.length){seg.push([X(x),Y(f(x))]);g+=poly(seg,cur);seg=[];}
+    cur=s;seg.push([X(x),Y(f(x))]);
+  }
+  g+=poly(seg,cur);
+  /* Solution sur l'axe des abscisses. */
+  const y0=Y(0);
+  if(op.pos===(q.a>0)){g+=bar(P/2,X(x1))+bar(X(x2),W-P/2);}else{g+=bar(X(x1),X(x2));}
+  [[x1,q.r1],[x2,q.r2]].forEach(function(r){
+    g+='<circle class="'+(op.strict?'open':'shut')+'" cx="'+X(r[0]).toFixed(1)+'" cy="'+y0+'" r="4.5"/>'
+      +'<text x="'+X(r[0]).toFixed(1)+'" y="'+(y0+(yv<0?-10:18))+'" text-anchor="middle">'+fmtF(r[1])+'</text>';
+  });
+  const alt='Parabole tournée vers le '+(q.a>0?'haut':'bas')+', qui coupe l’axe des abscisses en '+fmtF(q.r1)+' et '+fmtF(q.r2)+'.';
+  return '<svg class="graph sgraph" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+alt+'">'+g+'</svg>';
+  function poly(pts,s){return '<polyline class="'+(s?'cin':'cout')+'" points="'+pts.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' ')+'"/>';}
+  function bar(a,b){return '<line class="sol" x1="'+a.toFixed(1)+'" y1="'+y0+'" x2="'+b.toFixed(1)+'" y2="'+y0+'"/>';}
+}
+
+function explainSign(q){
+  const op=OPS.filter(function(o){return o.s===q.op;})[0],D=disc(q.a,q.b,q.c);
+  const out=(q.a>0)===op.pos,closed=!op.strict;
+  const sq=Math.round(Math.sqrt(D));
+  return '<p><strong>1. Racines.</strong> Δ = '+fmtInt(D)+' &gt; 0, √Δ = '+sq+' : x₁ = <strong>'+fmtF(q.r1)+'</strong> et x₂ = <strong>'+fmtF(q.r2)+'</strong>.</p>'
+    +'<p><strong>2. Tableau de signes.</strong> a = '+fmtInt(q.a)+(q.a>0?' &gt; 0':' &lt; 0')+' : f(x) a le signe de a (<strong>'+(q.a>0?'+':MINUS)+'</strong>) à l’extérieur des racines, le signe contraire entre elles.</p>'
+    +signTable(q,op)
+    +'<p><strong>3. Lecture.</strong> On cherche f(x) '+op.h+' 0 : les cases '+(op.pos?'+':MINUS)+(closed?', et les 0 car l’inégalité est large':'. Les 0 sont exclus car l’inégalité est stricte')+'. La parabole est '+(op.pos?'au-dessus':'en dessous')+' de l’axe '+(out?'à l’extérieur des racines':'entre les racines')+'.</p>'
+    +signGraph(q,op)
+    +'<p><strong>S = '+q.opts[q.correct]+'</strong></p>';
+}
+
 const MODE_KEYS=['disc','nsol','roots','sp','obv','vertex','sign'];
 const MODES={
   disc:{
@@ -481,14 +556,7 @@ const MODES={
     solve:q=>({choice:q.correct}),
     check:(q,ans)=>ans.choice===q.correct,
     answer:q=>q.opts[q.correct],
-    explain(q){
-      const op=OPS.filter(o=>o.s===q.op)[0],D=disc(q.a,q.b,q.c);
-      const out=(q.a>0)===op.pos,closed=!op.strict;
-      return 'Δ = '+fmtInt(D)+' &gt; 0 : deux racines x₁ = '+fmtF(q.r1)+' et x₂ = '+fmtF(q.r2)+'.<br>'
-        +'a = '+fmtInt(q.a)+' : le trinôme est '+(q.a>0?'positif':'négatif')+' à l’extérieur des racines et '+(q.a>0?'négatif':'positif')+' entre elles.<br>'
-        +'On veut '+op.h+' 0 : '+(out?'à l’extérieur des racines':'entre les racines')+', bornes '+(closed?'incluses':'exclues')+'.<br>'
-        +'<strong>S = '+q.opts[q.correct]+'</strong>';
-    }
+    explain:q=>explainSign(q)
   }
 };
 function targetFor(q){return MODES[q.m].target[q.level||'moyen'];}
