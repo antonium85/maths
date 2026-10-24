@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Suites · entraînement</title>
+<meta name="description" content="Entraînement chronométré sur les suites numériques (Première) : calcul de termes, suites arithmétiques et géométriques, sommes, sens de variation, modélisation.">
+<style>
+:root{
+  --bg:#f6f7fb;--surface:#ffffff;--text:#1c1f2b;--muted:#5b6275;--line:#dfe3ee;
+  --accent:#3f4fd8;--accent-ink:#ffffff;--accent-soft:#e8eaff;
+  --ok:#14773c;--ok-soft:#e3f6ea;--bad:#b4232a;--bad-soft:#fdecec;--warn:#9a5b00;
+  --radius:14px;
+  --math:"Cambria Math","STIX Two Math","Latin Modern Math",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#12141c;--surface:#1b1e29;--text:#eceef6;--muted:#a1a8bd;--line:#2c3144;
+    --accent:#8c97ff;--accent-ink:#10122a;--accent-soft:#252a4d;
+    --ok:#5fd18a;--ok-soft:#173424;--bad:#ff8a8f;--bad-soft:#3a1d20;--warn:#f1b560}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+[hidden]{display:none!important}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+header.top{background:var(--surface);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px}
+.brand{font:inherit;font-weight:700;background:none;border:0;color:var(--text);cursor:pointer;padding:8px 0}
+.brand span{color:var(--accent)}
+main{padding:20px 0 48px}
+h1{font-size:1.6rem;line-height:1.2;margin:.2rem 0 .5rem}
+h2{font-size:1.15rem;margin:1.6rem 0 .6rem}
+h3{font-size:1rem;margin:1.2rem 0 .4rem}
+h1:focus,h2:focus{outline:none}
+.lead{color:var(--muted);margin:0 0 1rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:10px 16px;border-radius:12px;cursor:pointer;min-height:44px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent}
+.btn.confirm{color:var(--warn);border-color:var(--warn)}
+.btn.small{min-height:36px;padding:6px 12px;font-size:.9rem}
+.btn.big{width:100%;font-size:1.1rem;min-height:52px}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+details.card summary{cursor:pointer;font-weight:600}
+details.card[open] summary{margin-bottom:10px}
+details.card ul{margin:.4rem 0 .8rem;padding-left:1.2rem}
+details.card li{margin:.25rem 0}
+.mode-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:600px){.mode-grid{grid-template-columns:1fr 1fr}}
+.mode{position:relative;display:block;cursor:pointer}
+.mode input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.mbody{display:block;height:100%;background:var(--surface);border:2px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.mbody strong{display:block}
+.mbody small{display:block;color:var(--muted)}
+.mbody em{display:block;font-style:normal;color:var(--muted);font-size:.85rem;margin-top:4px}
+.mode input:checked + .mbody{border-color:var(--accent);background:var(--accent-soft)}
+.mode input:focus-visible + .mbody{outline:3px solid var(--accent);outline-offset:2px}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.seg span{display:block;border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 16px;font-weight:600;min-height:44px;line-height:26px}
+.seg input:checked + span{border-color:var(--accent);background:var(--accent-soft)}
+.seg input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
+.hint{color:var(--muted);font-size:.9rem;margin:.5rem 0 0}
+.quizbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.badge{display:inline-block;background:var(--accent-soft);border-radius:999px;padding:2px 10px;font-size:.85rem;margin-left:6px}
+.timers{display:flex;gap:14px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.timer.over{color:var(--warn);font-weight:700}
+.pbar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:14px}
+.pbar>div{height:100%;background:var(--accent);width:0;transition:width .25s}
+.prompt{margin:0 0 14px;font-size:1.05rem}
+.math{font-family:var(--math);font-size:1.35em;white-space:nowrap}
+.field{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+.field label{min-width:7.5rem;font-weight:600}
+.field input{flex:1;min-width:0;font:inherit;font-size:1.2rem;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--text);min-height:48px}
+.field input:focus{border-color:var(--accent)}
+.field input[readonly]{opacity:.8}
+.choices{display:grid;gap:10px;margin-bottom:10px}
+.choice{font-family:var(--math);font-size:1.2rem;text-align:left;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);cursor:pointer;min-height:48px}
+.choice:hover:not(:disabled){border-color:var(--accent)}
+.choice:disabled{cursor:default;color:var(--text)}
+.choice.right{border-color:var(--ok);background:var(--ok-soft)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.keys{display:none;gap:8px;margin-top:10px}
+@media(pointer:coarse){.keys{display:flex}}
+.keys button{font:inherit;font-size:1.2rem;min-width:52px;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
+.formmsg{margin:8px 0 0;color:var(--bad);font-weight:600;min-height:1.5em}
+.fb{margin-top:14px;border-radius:12px;padding:12px 14px;border:1px solid var(--line)}
+.fb.ok{background:var(--ok-soft);border-color:var(--ok)}
+.fb.bad{background:var(--bad-soft);border-color:var(--bad)}
+.fb p{margin:0 0 6px}
+.explain{margin:8px 0 12px;font-size:.97rem}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0}
+@media(min-width:600px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:.85rem}
+.err{margin:10px 0}
+.err .math{font-size:1.2em}
+.err details{margin-top:6px}
+.err summary{cursor:pointer;color:var(--accent);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:.95rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th{color:var(--muted);font-weight:600;font-size:.85rem}
+tr:last-child td{border-bottom:0}
+.tablewrap{overflow-x:auto}
+.explain p{margin:0 0 8px}
+.note{color:var(--muted);font-size:.85rem;margin-top:28px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <button class="brand" id="brandBtn" type="button">Suites <span>· entraînement</span></button>
+  <button class="btn small" id="progBtn" type="button">Ma progression</button>
+</div></header>
+
+<main class="wrap">
+<noscript><p class="card">Cette page a besoin de JavaScript pour générer les exercices.</p></noscript>
+
+<!-- ACCUEIL -->
+<section id="home" aria-labelledby="homeTitle">
+  <h1 id="homeTitle">Suites numériques : vitesse et précision</h1>
+  <p class="lead">Séries chronométrées de questions courtes. Chaque erreur est corrigée avec la méthode, puis ajoutée à ton carnet pour être retravaillée plus tard.</p>
+
+  <details class="card" id="memo">
+    <summary>Rappels : formules et astuces</summary>
+    <ul>
+      <li><strong>Deux façons de définir une suite</strong> : formule explicite uₙ = f(n) (on remplace n directement) ou relation de récurrence uₙ₊₁ = f(uₙ) (on calcule les termes un par un).</li>
+      <li><strong>Suite arithmétique</strong> de raison r : uₙ₊₁ = uₙ + r, donc uₙ = u₀ + nr et, plus généralement, uₙ = uₚ + (n − p)r.</li>
+      <li><strong>Suite géométrique</strong> de raison q : uₙ₊₁ = q × uₙ, donc uₙ = u₀ × qⁿ et uₙ = uₚ × qⁿ⁻ᵖ.</li>
+      <li><strong>Reconnaître</strong> : uₙ₊₁ − uₙ constant → arithmétique ; uₙ₊₁ / uₙ constant (termes non nuls) → géométrique. Pour montrer que ce n’est ni l’un ni l’autre, un contre-exemple sur u₀, u₁, u₂ suffit.</li>
+      <li><strong>Sommes</strong> : 1 + 2 + … + n = n(n + 1)/2 ; 1 + q + … + qⁿ = (1 − qⁿ⁺¹)/(1 − q) si q ≠ 1. Termes consécutifs d’une suite arithmétique : nombre de termes × (premier + dernier)/2.</li>
+      <li><strong>Sens de variation</strong> : étudier le signe de uₙ₊₁ − uₙ. Arithmétique : signe de r. Géométrique avec u₀ &gt; 0 : croissante si q &gt; 1, décroissante si 0 &lt; q &lt; 1 ; si q &lt; 0, ni l’un ni l’autre.</li>
+      <li><strong>Pourcentages</strong> : augmenter de t % revient à multiplier par 1 + t/100 ; baisser de t %, à multiplier par 1 − t/100.</li>
+      <li><strong>Pièges classiques</strong> : premier terme u₁ au lieu de u₀ (exposant n − 1) ; de uₚ à uₙ il y a n − p + 1 termes ; +3 % donne 1,03 et non 1,3.</li>
+    </ul>
+  </details>
+
+  <h2>1. Choisis un entraînement</h2>
+  <div class="mode-grid" id="modeGrid" role="radiogroup" aria-label="Type d’entraînement"></div>
+
+  <h2>2. Niveau</h2>
+  <div class="seg" role="radiogroup" aria-label="Niveau" id="levelSeg">
+    <label><input type="radio" name="level" value="facile"><span>Facile</span></label>
+    <label><input type="radio" name="level" value="moyen"><span>Moyen</span></label>
+    <label><input type="radio" name="level" value="difficile"><span>Difficile</span></label>
+  </div>
+  <p class="hint" id="levelHint"></p>
+
+  <h2>3. Nombre de questions</h2>
+  <div class="seg" role="radiogroup" aria-label="Nombre de questions" id="lenSeg">
+    <label><input type="radio" name="len" value="5"><span>5</span></label>
+    <label><input type="radio" name="len" value="10"><span>10</span></label>
+    <label><input type="radio" name="len" value="15"><span>15</span></label>
+  </div>
+
+  <h2>4. Chrono</h2>
+  <div class="seg" role="radiogroup" aria-label="Chrono" id="timedSeg">
+    <label><input type="radio" name="timed" value="1"><span>Avec chrono</span></label>
+    <label><input type="radio" name="timed" value="0"><span>Sans chrono</span></label>
+  </div>
+  <p class="hint">Sans chrono, rien n’est minuté : prends le temps de poser les calculs.</p>
+
+  <div class="row">
+    <button class="btn primary big" id="startBtn" type="button">Commencer la série</button>
+  </div>
+  <div class="row">
+    <button class="btn" id="bookBtn" type="button">Carnet d’erreurs</button>
+  </div>
+  <p class="hint">Le carnet regroupe les questions ratées. Une question réussie depuis le carnet en sort.</p>
+  <p class="note" id="storeNote" hidden>Ce navigateur bloque l’enregistrement local : l’historique et le carnet seront perdus à la fermeture de la page.</p>
+  <p class="note">Page statique : aucune donnée n’est envoyée nulle part. L’historique et le carnet restent dans ce navigateur, sur cet appareil.</p>
+</section>
+
+<!-- QUESTIONS -->
+<section id="quiz" hidden aria-label="Série en cours">
+  <div class="quizbar">
+    <div><strong id="qNum"></strong><span class="badge" id="qMode"></span></div>
+    <div class="timers" id="timers" aria-hidden="true"><span>Total <b id="tTotal">0:00</b></span><span id="tQ" class="timer">0 s</span></div>
+    <button class="btn ghost small" id="quitBtn" type="button">Quitter</button>
+  </div>
+  <div class="pbar" aria-hidden="true"><div id="pfill"></div></div>
+  <div class="card">
+    <p class="prompt" id="qPrompt"></p>
+    <form id="qForm" autocomplete="off" novalidate>
+      <div id="qFields"></div>
+      <div id="qChoices" class="choices"></div>
+      <div class="actions">
+        <button type="submit" class="btn primary" id="submitBtn">Valider</button>
+      </div>
+      <div class="keys" id="keys" aria-hidden="true">
+        <button type="button" data-k="-" tabindex="-1">−</button>
+        <button type="button" data-k="/" tabindex="-1">/</button>
+        <button type="button" data-k="," tabindex="-1">,</button>
+      </div>
+      <p class="formmsg" id="formMsg" role="alert"></p>
+    </form>
+    <div id="feedback" role="status" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- BILAN -->
+<section id="results" hidden aria-labelledby="resTitle">
+  <h2 id="resTitle">Bilan de la série</h2>
+  <div class="stats" id="resStats"></div>
+  <p id="resMsg" class="lead"></p>
+  <div id="resErrors"></div>
+  <div class="row" id="resActions"></div>
+</section>
+
+<!-- PROGRESSION -->
+<section id="progress" hidden aria-labelledby="progTitle">
+  <h2 id="progTitle">Ma progression</h2>
+  <div id="progBody"></div>
+  <div class="row">
+    <button class="btn" id="progHome" type="button">Retour</button>
+    <button class="btn ghost" id="progReset" type="button">Effacer l’historique</button>
+  </div>
+</section>
+</main>
+
+<script>
+(function(){
+'use strict';
+
+/* ==LOGIC-START== */
+const MINUS='−';
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=a%b;a=b;b=t;}return a;}
+function F(n,d){if(d===undefined)d=1;if(d<0){n=-n;d=-d;}const g=gcd(n,d)||1;return [n/g,d/g];}
+function fmtInt(n){return n<0?MINUS+Math.abs(n):String(n);}
+function fmtF(f){return f[1]===1?fmtInt(f[0]):fmtInt(f[0])+'/'+f[1];}
+function par(x){const s=typeof x==='number'?fmtInt(x):fmtF(x);return s.charAt(0)===MINUS||s.indexOf('/')>=0?'('+s+')':s;}
+function fneg(f){return [-f[0],f[1]];}
+function fadd(x,y){return F(x[0]*y[1]+y[0]*x[1],x[1]*y[1]);}
+function fsub(x,y){return fadd(x,fneg(y));}
+function fmul(x,y){return F(x[0]*y[0],x[1]*y[1]);}
+function fdiv(x,y){return F(x[0]*y[1],x[1]*y[0]);}
+function fpow(x,k){let r=[1,1];for(let i=0;i<k;i++)r=fmul(r,x);return r;}
+function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+function nz(a,b){let v;do{v=rnd(a,b);}while(v===0);return v;}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=arr[i];arr[i]=arr[j];arr[j]=t;}return arr;}
+
+/* Indices et exposants en caractères Unicode : ils passent aussi dans les boutons de choix (texte brut). */
+const SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function u(k){return 'u'+String(k).replace(/\d/g,function(d){return SUB[d];});}
+function sup(k){return String(k).replace(/\d/g,function(d){return SUP[d];});}
+function m(s){return '<span class="math">'+s+'</span>';}
+/* q (entier ou fraction) à la puissance k : k numérique ou exposant déjà écrit ('ⁿ'). */
+function pw(q,k){
+  const f=typeof q==='number'?F(q):q,s=fmtF(f);
+  return (f[0]<0||f[1]!==1?'('+s+')':s)+(typeof k==='number'?sup(k):k);
+}
+/* Expression à coefficients entiers : lin([[2,'n²'],[-3,'n'],[1,'']]) → 2n² − 3n + 1 */
+function lin(terms){
+  let s='';
+  terms.forEach(function(t){
+    const c=t[0],v=t[1];if(c===0)return;
+    const body=(Math.abs(c)===1&&v?'':String(Math.abs(c)))+v;
+    if(!s)s=(c<0?MINUS:'')+body;
+    else s+=(c<0?' '+MINUS+' ':' + ')+body;
+  });
+  return s||'0';
+}
+function plusTerm(v){return v===0?'':(v<0?' '+MINUS+' '+(-v):' + '+v);}
+function geoStr(c,q){return (c===1?'':(c===-1?MINUS:fmtInt(c)+' × '))+pw(q,'ⁿ');}
+function fmtDec(x){const s=String(Math.round(x*10000)/10000).replace('.',',');return s.charAt(0)==='-'?MINUS+s.slice(1):s;}
+function fmtBig(n){return n.toLocaleString('fr-FR');}
+function mkChoices(correct,cands){
+  const opts=[correct];
+  for(let i=0;i<cands.length&&opts.length<4;i++){if(opts.indexOf(cands[i])<0)opts.push(cands[i]);}
+  shuffle(opts);
+  return {opts:opts,correct:opts.indexOf(correct)};
+}
+
+/* Lecture d'une réponse saisie : entier, fraction a/b ou décimal (virgule ou point). */
+function parseNum(str){
+  const s=String(str).trim().replace(/[−–—]/g,'-').replace(/\s+/g,'').replace(/,/g,'.');
+  if(!s)return null;
+  let r=s.match(/^([+-]?\d+)\/(\d+)$/);
+  if(r){const n=parseInt(r[1],10),d=parseInt(r[2],10);if(d===0)return null;return {f:F(n,d)};}
+  r=s.match(/^[+-]?\d+(\.\d+)?$/);
+  if(r){return r[1]===undefined?{f:F(parseInt(s,10),1)}:{val:parseFloat(s)};}
+  return null;
+}
+function eqNum(p,f){
+  if(!p)return false;
+  if(p.f)return p.f[0]*f[1]===f[0]*p.f[1];
+  const ev=f[0]/f[1];
+  if(Math.abs(p.val-ev)<1e-9)return true;
+  if(100%f[1]!==0&&Math.abs(p.val-ev)<0.01)return true; /* valeur non décimale (ex. 1/3) : arrondi à 2 décimales toléré */
+  return false;
+}
+
+const LEVELS={
+  facile:{label:'Facile',desc:'Petits entiers, premier terme u₀, raisons positives.',lv:0},
+  moyen:{label:'Moyen',desc:'Raisons négatives, premier terme u₁, sommes de termes.',lv:1},
+  difficile:{label:'Difficile',desc:'Raisons fractionnaires, nombre de termes à trouver, récurrences.',lv:2}
+};
+
+/* ---------- Calculer un terme ---------- */
+function termSeq(q){
+  const out=[];
+  if(q.kind==='exp'||q.kind==='frac'){
+    for(let n=0;n<=q.k;n++)out.push(q.kind==='exp'?F(q.a*n*n+q.b*n+q.c):F(q.a*n+q.b,n+q.c));
+    return out;
+  }
+  let v=q.u0;out.push(F(v));
+  for(let n=0;n<q.k;n++){v=q.kind==='rec'?q.a*v+q.b:v+q.a*n+q.b;out.push(F(v));}
+  return out;
+}
+function termVal(q){const s=termSeq(q);return s[s.length-1];}
+function explainTerm(q){
+  const k=q.k,v=termVal(q);
+  if(q.kind==='exp'){
+    const ex=[],vs=[];
+    if(q.a){ex.push(fmtInt(q.a)+' × '+k+'²');vs.push(q.a*k*k);}
+    ex.push(par(q.b)+' × '+k);vs.push(q.b*k);
+    if(q.c){ex.push(par(q.c));vs.push(q.c);}
+    return 'Formule explicite : on remplace n par '+k+', sans calculer les termes précédents.<br>'
+      +u(k)+' = '+ex.join(' + ')+' = '+fmtInt(vs[0])+vs.slice(1).map(plusTerm).join('')+' = <strong>'+fmtF(v)+'</strong>.';
+  }
+  if(q.kind==='frac'){
+    const num=q.a*k+q.b,den=k+q.c;
+    return 'Formule explicite : on remplace n par '+k+'.<br>'+u(k)+' = ('+fmtInt(q.a)+' × '+k+plusTerm(q.b)+') / ('+k+' + '+q.c+') = '+(v[1]===den?'':fmtInt(num)+' / '+den+' = ')+'<strong>'+fmtF(v)+'</strong>.';
+  }
+  const s=termSeq(q);
+  let t='Relation de récurrence : on calcule les termes un par un à partir de u₀ = '+fmtInt(q.u0)+'.';
+  for(let n=0;n<k;n++){
+    const p=s[n][0],nv=fmtInt(s[n+1][0]);
+    t+='<br>'+u(n+1)+' = '+(q.kind==='rec'?fmtInt(q.a)+' × '+par(p)+plusTerm(q.b):fmtInt(p)+' + '+par(q.a)+' × '+n+plusTerm(q.b))+' = '+(n+1===k?'<strong>'+nv+'</strong>':nv);
+  }
+  if(q.kind==='recn')t+='<br>Piège : dans uₙ₊₁ = uₙ + …, n est l’indice du terme précédent (n = 0 pour calculer u₁).';
+  return t;
+}
+
+/* ---------- Suites arithmétiques et géométriques ---------- */
+function arVal(q){return q.first+(q.n-q.p)*q.r;}
+function arU0(q){return fsub(F(q.up),fmul(F(q.p),q.r));}
+function geVal(q){return fmul(F(q.first),fpow(q.q,q.n-q.p));}
+function geoSum(u0,q,N){return fmul(F(u0),fdiv(fsub([1,1],fpow(q,N+1)),fsub([1,1],q)));}
+
+/* ---------- Sommes ---------- */
+function sumVal(q){
+  if(q.kind==='nat')return F(q.N*(q.N+1)/2);
+  if(q.kind==='ar'){const uN=q.u0+q.N*q.r;return F((q.N+1)*(q.u0+uN),2);}
+  if(q.kind==='arp'){const last=q.first+(q.cnt-1)*q.r;return F(q.cnt*(q.first+last),2);}
+  return geoSum(q.u0,q.q,q.N);
+}
+function explainSum(q){
+  const S='<strong>'+fmtF(sumVal(q))+'</strong>';
+  if(q.kind==='nat')return '1 + 2 + … + n = n(n + 1) / 2, avec n = '+q.N+'.<br>S = '+q.N+' × '+(q.N+1)+' / 2 = '+S+'.';
+  if(q.kind==='ar'){
+    const uN=q.u0+q.N*q.r;
+    return u(q.N)+' = u₀ + '+q.N+'r = '+fmtInt(q.u0)+' + '+q.N+' × '+par(q.r)+' = '+fmtInt(uN)+'. De u₀ à '+u(q.N)+', il y a '+(q.N+1)+' termes.<br>'
+      +'S = nombre de termes × (premier + dernier) / 2 = '+(q.N+1)+' × ('+fmtInt(q.u0)+' + '+par(uN)+') / 2 = '+S+'.';
+  }
+  if(q.kind==='arp'){
+    const last=q.first+(q.cnt-1)*q.r;
+    return 'On ajoute '+fmtInt(q.r)+' d’un terme au suivant : termes consécutifs d’une suite arithmétique de raison '+fmtInt(q.r)+'.<br>'
+      +'Nombre de termes : (dernier − premier) / r + 1 = ('+fmtInt(last)+' − '+par(q.first)+') / '+par(q.r)+' + 1 = '+q.cnt+'.<br>'
+      +'S = nombre de termes × (premier + dernier) / 2 = '+q.cnt+' × ('+fmtInt(q.first)+' + '+par(last)+') / 2 = '+S+'.';
+  }
+  const one=q.u0===1?'':fmtInt(q.u0)+' × ';
+  return 'Termes consécutifs d’une suite géométrique de raison q = '+fmtF(q.q)+' ≠ 1, de u₀ à '+u(q.N)+' ('+(q.N+1)+' termes) :<br>'
+    +'S = u₀ × (1 − q'+sup(q.N+1)+') / (1 − q) = '+one+'(1 − '+pw(q.q,q.N+1)+') / (1 − '+par(q.q)+') = '+one+'(1 − '+par(fpow(q.q,q.N+1))+') / '+par(fsub([1,1],q.q))+' = '+S+'.';
+}
+
+/* ---------- Sens de variation ---------- */
+const VAR=['Croissante','Décroissante','Ni croissante ni décroissante'];
+function pVal(P,n){return P[0]*n*n+P[1]*n+P[2];}
+/* Signe de P(n) pour n ∈ ℕ : 0 toujours > 0, 1 toujours < 0, 2 le signe change. */
+function pSign(P){
+  let pos=false,neg=false;
+  for(let n=0;n<=60;n++){const v=pVal(P,n);if(v>0)pos=true;if(v<0)neg=true;}
+  return pos&&!neg?0:(neg&&!pos?1:2);
+}
+function varOf(q){
+  if(q.kind==='ar')return q.r>0?0:1;
+  if(q.kind==='ge'){if(q.q[0]<0)return 2;return q.c*(q.q[0]-q.q[1])>0?0:1;}
+  return pSign(q.P);
+}
+function diffText(P){
+  const v=pSign(P);
+  if(v<2)return 'Pour n ≥ 0, cette expression est toujours strictement '+(v===0?'positive':'négative')+' (ses termes sont tous du même signe) : uₙ₊₁ '+(v===0?'&gt;':'&lt;')+' uₙ, la suite est <strong>'+VAR[v].toLowerCase()+'</strong>.';
+  const s0=Math.sign(pVal(P,0));let n1=1;while(Math.sign(pVal(P,n1))!==-s0)n1++;
+  return 'Pour n = 0, elle vaut '+fmtInt(pVal(P,0))+' ; pour n = '+n1+', elle vaut '+fmtInt(pVal(P,n1))+' : le signe change, la suite n’est <strong>ni croissante ni décroissante</strong>.';
+}
+function explainVar(q){
+  const v=varOf(q);
+  if(q.kind==='ar')return 'Suite arithmétique de raison r = '+fmtInt(q.r)+' : uₙ₊₁ − uₙ = '+fmtInt(q.r)+(q.r>0?' &gt; 0':' &lt; 0')+', donc la suite est <strong>'+VAR[v].toLowerCase()+'</strong>.';
+  if(q.kind==='ge'){
+    if(v===2){
+      const t=[0,1,2].map(function(n){return u(n)+' = '+fmtF(fmul(F(q.c),fpow(q.q,n)));}).join(', ');
+      return 'Suite géométrique de raison q = '+fmtF(q.q)+' &lt; 0 : les termes changent de signe à chaque rang ('+t+'). La suite n’est <strong>ni croissante ni décroissante</strong>.';
+    }
+    const qm=fsub(q.q,[1,1]),sg=function(x){return x>0?' &gt; 0':' &lt; 0';};
+    return 'Suite géométrique de premier terme u₀ = '+fmtInt(q.c)+' et de raison q = '+fmtF(q.q)+' &gt; 0.<br>'
+      +'uₙ₊₁ − uₙ = u₀ × qⁿ × (q − 1) avec qⁿ &gt; 0, u₀'+sg(q.c)+' et q − 1 = '+fmtF(qm)+sg(qm[0])+'.<br>'
+      +'Donc uₙ₊₁ − uₙ'+sg(v===0?1:-1)+' : la suite est <strong>'+VAR[v].toLowerCase()+'</strong>.';
+  }
+  if(q.kind==='rn')return 'uₙ₊₁ − uₙ = '+lin([[q.P[0],'n²'],[q.P[1],'n'],[q.P[2],'']])+'.<br>'+diffText(q.P);
+  return 'uₙ₊₁ − uₙ = a(n + 1)² + b(n + 1) + c − (an² + bn + c) = 2an + a + b, avec a = '+fmtInt(q.a)+' et b = '+fmtInt(q.b)+' :<br>'
+    +'uₙ₊₁ − uₙ = '+lin([[q.P[1],'n'],[q.P[2],'']])+'. '+diffText(q.P);
+}
+
+const MODE_KEYS=['term','arith','geo','nature','sum','var','model'];
+const MODES={
+  term:{
+    label:'Calculer un terme',desc:'Formule explicite ou relation de récurrence : calculer un terme précis.',target:{facile:30,moyen:45,difficile:60},
+    gen(L){
+      const kind=pick([['exp','rec'],['exp','rec','recn'],['exp','rec','recn','frac']][L.lv]);
+      if(kind==='exp')return {m:'term',kind:kind,a:L.lv===0?pick([0,1]):nz(-3,3),b:nz(-6,6),c:rnd(-9,9),k:rnd(2,L.lv===0?5:9)};
+      if(kind==='frac'){let a,b,c;do{a=nz(-4,4);b=nz(-6,6);c=rnd(1,4);}while(b===a*c);return {m:'term',kind:kind,a:a,b:b,c:c,k:rnd(1,6)};}
+      if(kind==='rec')return {m:'term',kind:kind,a:pick(L.lv===0?[2,3]:[2,3,-2,-3]),b:nz(-5,5),u0:rnd(-4,5),k:L.lv===0?2:3};
+      return {m:'term',kind:kind,a:nz(-3,3),b:rnd(-5,5),u0:rnd(-5,5),k:3};
+    },
+    prompt(q){
+      let d;
+      if(q.kind==='exp')d=m('uₙ = '+lin([[q.a,'n²'],[q.b,'n'],[q.c,'']]));
+      else if(q.kind==='frac')d=m('uₙ = ('+lin([[q.a,'n'],[q.b,'']])+') / (n + '+q.c+')');
+      else d=m('u₀ = '+fmtInt(q.u0))+' et '+m('uₙ₊₁ = '+(q.kind==='rec'?lin([[q.a,'uₙ'],[q.b,'']]):lin([[1,'uₙ'],[q.a,'n'],[q.b,'']])));
+      return 'La suite (uₙ) est définie pour tout n ∈ ℕ par '+d+'. Calcule '+u(q.k)+'.';
+    },
+    fields:q=>[{label:u(q.k)+' ='}],
+    solve:q=>({vals:[fmtF(termVal(q))]}),
+    check:(q,ans)=>eqNum(parseNum(ans.vals[0]),termVal(q)),
+    answer:q=>u(q.k)+' = '+fmtF(termVal(q)),
+    explain:q=>explainTerm(q)
+  },
+  arith:{
+    label:'Suite arithmétique',desc:'uₙ = u₀ + nr : calculer un terme lointain, retrouver la raison.',target:{facile:30,moyen:40,difficile:60},needAll:true,
+    gen(L){
+      const kind=pick([['u0','u0','two'],['u0','u1','two'],['u1','two','two']][L.lv]);
+      if(kind!=='two'){
+        const r=L.lv===0?pick([1,1,-1])*rnd(2,6):nz(-9,9);
+        return {m:'arith',kind:kind,p:kind==='u0'?0:1,first:rnd(-20,20),r:r,n:L.lv===0?rnd(5,20):rnd(12,100)};
+      }
+      /* Au niveau difficile, raison fractionnaire : l'écart entre les rangs est pair pour garder des termes entiers. */
+      const half=L.lv===2&&Math.random()<0.6;
+      const r=half?F(pick([1,3,5,7])*pick([1,-1]),2):F(L.lv===0?rnd(2,7):nz(-9,9));
+      const p=rnd(1,L.lv===0?3:6),gap=half?2*rnd(1,4):rnd(2,L.lv===0?4:7),up=rnd(-20,20);
+      return {m:'arith',kind:kind,r:r,p:p,pq:p+gap,up:up,uq:up+gap*r[0]/r[1]};
+    },
+    prompt(q){
+      if(q.kind==='two')return '(uₙ) est une suite arithmétique telle que '+m(u(q.p)+' = '+fmtInt(q.up))+' et '+m(u(q.pq)+' = '+fmtInt(q.uq))+'. Donne sa raison r et son premier terme u₀.';
+      return '(uₙ) est la suite arithmétique de premier terme '+m(u(q.p)+' = '+fmtInt(q.first))+' et de raison '+m('r = '+fmtInt(q.r))+'. Calcule '+u(q.n)+'.';
+    },
+    fields:q=>q.kind==='two'?[{label:'r ='},{label:'u₀ ='}]:[{label:u(q.n)+' ='}],
+    solve:q=>q.kind==='two'?{vals:[fmtF(q.r),fmtF(arU0(q))]}:{vals:[fmtInt(arVal(q))]},
+    check(q,ans){
+      if(q.kind==='two')return eqNum(parseNum(ans.vals[0]),q.r)&&eqNum(parseNum(ans.vals[1]),arU0(q));
+      return eqNum(parseNum(ans.vals[0]),F(arVal(q)));
+    },
+    answer:q=>q.kind==='two'?'r = '+fmtF(q.r)+' ; u₀ = '+fmtF(arU0(q)):u(q.n)+' = '+fmtInt(arVal(q)),
+    explain(q){
+      if(q.kind==='two'){
+        const gap=q.pq-q.p;
+        return 'De '+u(q.p)+' à '+u(q.pq)+', on ajoute '+gap+' fois la raison : '+u(q.pq)+' = '+u(q.p)+' + '+gap+'r.<br>'
+          +'r = ('+fmtInt(q.uq)+' − '+par(q.up)+') / '+gap+' = '+fmtInt(q.uq-q.up)+' / '+gap+' = <strong>'+fmtF(q.r)+'</strong>.<br>'
+          +'u₀ = '+u(q.p)+' − '+(q.p===1?'':q.p)+'r = '+fmtInt(q.up)+' − '+q.p+' × '+par(q.r)+' = <strong>'+fmtF(arU0(q))+'</strong>.';
+      }
+      const k=q.n-q.p,res=' = '+fmtInt(q.first)+' + '+k+' × '+par(q.r)+' = '+fmtInt(q.first)+plusTerm(k*q.r)+' = <strong>'+fmtInt(arVal(q))+'</strong>.';
+      if(q.kind==='u1')return 'Le premier terme est u₁ et non u₀ : uₙ = u₁ + (n − 1)r.<br>'+u(q.n)+' = u₁ + '+k+'r'+res;
+      return 'uₙ = u₀ + nr, donc '+u(q.n)+' = u₀ + '+k+'r'+res;
+    }
+  },
+  geo:{
+    label:'Suite géométrique',desc:'uₙ = u₀ × qⁿ : calculer un terme, retrouver la raison.',target:{facile:30,moyen:45,difficile:60},
+    gen(L){
+      const kind=pick([['u0','u0','ratio'],['u0','u1','ratio'],['u0','u1','ratio']][L.lv]);
+      const q=pick([[[2,1],[3,1]],[[2,1],[3,1],[-2,1],[-3,1]],[[1,2],[-1,2],[3,2],[2,3],[-2,1],[1,3]]][L.lv]);
+      if(kind==='ratio'){
+        const qr=L.lv===0?pick([[2,1],[3,1],[4,1],[5,1]]):(L.lv===1?pick([[2,1],[3,1],[-2,1],[-3,1],[1,2]]):q);
+        const a=(L.lv===0?rnd(1,9):nz(-9,9))*qr[1];
+        return {m:'geo',kind:kind,p:rnd(1,6),a:a,b:a*qr[0]/qr[1],q:qr};
+      }
+      const p=kind==='u0'?0:1,e=rnd(3,L.lv===1?6:5);
+      /* Premier terme multiple du dénominateur de q puissance e : le terme demandé reste entier. */
+      return {m:'geo',kind:kind,p:p,n:p+e,q:q,first:(L.lv===0?rnd(1,5):nz(-5,5))*Math.pow(q[1],e)};
+    },
+    prompt(q){
+      if(q.kind==='ratio')return '(uₙ) est une suite géométrique telle que '+m(u(q.p)+' = '+fmtInt(q.a))+' et '+m(u(q.p+1)+' = '+fmtInt(q.b))+'. Donne sa raison q.';
+      return '(uₙ) est la suite géométrique de premier terme '+m(u(q.p)+' = '+fmtInt(q.first))+' et de raison '+m('q = '+fmtF(q.q))+'. Calcule '+u(q.n)+'.';
+    },
+    fields:q=>[{label:q.kind==='ratio'?'q =':u(q.n)+' ='}],
+    solve:q=>({vals:[fmtF(q.kind==='ratio'?q.q:geVal(q))]}),
+    check:(q,ans)=>eqNum(parseNum(ans.vals[0]),q.kind==='ratio'?q.q:geVal(q)),
+    answer:q=>q.kind==='ratio'?'q = '+fmtF(q.q):u(q.n)+' = '+fmtF(geVal(q)),
+    explain(q){
+      if(q.kind==='ratio')return 'On passe d’un terme au suivant en multipliant par q : q = '+u(q.p+1)+' / '+u(q.p)+' = '+fmtInt(q.b)+' / '+par(q.a)+' = <strong>'+fmtF(q.q)+'</strong>.';
+      const e=q.n-q.p,res=' = '+fmtInt(q.first)+' × '+pw(q.q,e)+' = '+fmtInt(q.first)+' × '+par(fpow(q.q,e))+' = <strong>'+fmtF(geVal(q))+'</strong>.';
+      if(q.kind==='u1')return 'Le premier terme est u₁ et non u₀ : uₙ = u₁ × qⁿ⁻¹.<br>'+u(q.n)+' = u₁ × q'+sup(e)+res;
+      return 'uₙ = u₀ × qⁿ, donc '+u(q.n)+' = u₀ × q'+sup(e)+res;
+    }
+  },
+  nature:{
+    label:'Arithmétique ou géométrique ?',desc:'Reconnaître la nature d’une suite et donner sa raison.',target:{facile:20,moyen:25,difficile:35},
+    gen(L){
+      const A=function(x){return 'Arithmétique de raison '+fmtF(x);},G=function(x){return 'Géométrique de raison '+fmtF(x);},N='Ni arithmétique ni géométrique';
+      const kind=pick(['ea','eg','ra','rg','no']);
+      let def,correct,cands,ex;
+      if(kind==='ea'){
+        const c=rnd(-9,9),k=nz(-6,6),half=L.lv===2&&Math.random()<0.5,r=F(k,half?2:1);
+        def=m('uₙ = '+(half?'('+lin([[c,''],[k,'n']])+') / 2':(Math.random()<0.5?lin([[c,''],[k,'n']]):lin([[k,'n'],[c,'']]))));
+        correct=A(r);cands=[G(r),A(F(c,half?2:1)),N,A(fneg(r))];
+        ex='uₙ est de la forme u₀ + nr (expression affine en n) : uₙ₊₁ − uₙ = '+fmtF(r)+' pour tout n. La différence est constante, donc (uₙ) est <strong>arithmétique de raison '+fmtF(r)+'</strong>, de premier terme u₀ = '+fmtF(F(c,half?2:1))+'.';
+      }else if(kind==='eg'){
+        const v=rnd(0,L.lv);let r,u0,pre='';
+        if(v===0){r=F(pick(L.lv===0?[2,3,4,5]:[2,3,5,-2,-3]));u0=L.lv===0?rnd(2,6):nz(-5,5);def=m('uₙ = '+geoStr(u0,r));}
+        else if(v===1){const k=pick([2,3,5]);r=F(k);u0=k;def=m('uₙ = '+k+'ⁿ⁺¹');pre='uₙ = '+k+'ⁿ⁺¹ = '+k+' × '+k+'ⁿ. ';}
+        else{const d=pick([2,3,4]);r=F(1,d);u0=rnd(2,9);def=m('uₙ = '+u0+' / '+d+'ⁿ');pre='uₙ = '+u0+' / '+d+'ⁿ = '+u0+' × (1/'+d+')ⁿ. ';}
+        correct=G(r);cands=[A(r),G(F(u0)),N,G(fneg(r))];
+        ex=pre+'Les termes sont non nuls et uₙ₊₁ / uₙ = '+fmtF(r)+' pour tout n : on multiplie toujours par le même nombre, donc (uₙ) est <strong>géométrique de raison '+fmtF(r)+'</strong>, de premier terme u₀ = '+fmtInt(u0)+'.';
+      }else if(kind==='ra'){
+        const u0=rnd(-9,9),k=nz(-8,8);
+        def=m('u₀ = '+fmtInt(u0))+' et '+m(L.lv===2&&Math.random()<0.5?'uₙ₊₁ − uₙ = '+fmtInt(k):'uₙ₊₁ = '+lin([[1,'uₙ'],[k,'']]));
+        correct=A(F(k));cands=[G(F(k)),A(F(u0)),N,A(F(-k))];
+        ex='On passe d’un terme au suivant en ajoutant toujours '+fmtInt(k)+' : (uₙ) est <strong>arithmétique de raison '+fmtInt(k)+'</strong>.';
+      }else if(kind==='rg'){
+        const u0=nz(-9,9);let r;
+        if(L.lv===2&&Math.random()<0.5){const d=pick([2,3,4]);r=F(1,d);def=m('u₀ = '+fmtInt(u0))+' et '+m('uₙ₊₁ = uₙ / '+d);}
+        else{const k=pick([2,3,4,-2,-3,-1]);r=F(k);def=m('u₀ = '+fmtInt(u0))+' et '+m('uₙ₊₁ = '+lin([[k,'uₙ']]));}
+        correct=G(r);cands=[A(r),G(F(u0)),N,G(fneg(r))];
+        ex='On passe d’un terme au suivant en multipliant toujours par '+fmtF(r)+' : (uₙ) est <strong>géométrique de raison '+fmtF(r)+'</strong>.';
+      }else{
+        /* Ni l'un ni l'autre : on le montre sur les trois premiers termes (choisis non nuls). */
+        let t,v;
+        for(;;){
+          v=pick(['sq','pw','aff','rn']);
+          if(v==='sq'){const c=nz(-5,5);t=[c,c+1,c+4];def=m('uₙ = '+lin([[1,'n²'],[c,'']]));cands=[A(F(1)),A(F(2)),G(F(2)),G(F(1))];}
+          else if(v==='pw'){const k=pick([2,3]),c=nz(-4,5);t=[1+c,k+c,k*k+c];def=m('uₙ = '+k+'ⁿ'+plusTerm(c));cands=[G(F(k)),A(F(c)),A(F(k)),G(F(c))];}
+          else if(v==='aff'){const a=pick([2,3,-2]),b=nz(-5,5),u0=nz(-5,5);t=[u0,a*u0+b,a*(a*u0+b)+b];def=m('u₀ = '+fmtInt(u0))+' et '+m('uₙ₊₁ = '+lin([[a,'uₙ'],[b,'']]));cands=[G(F(a)),A(F(b)),A(F(a)),G(F(b))];}
+          else{const u0=nz(-5,9);t=[u0,u0,u0+1];def=m('u₀ = '+fmtInt(u0))+' et '+m('uₙ₊₁ = uₙ + n');cands=[A(F(1)),G(F(1)),A(F(u0)),G(F(2))];}
+          if(t.every(function(x){return x!==0;})&&t[1]-t[0]!==t[2]-t[1]&&t[1]*t[1]!==t[0]*t[2])break;
+        }
+        correct=N;
+        ex='Premiers termes : u₀ = '+fmtInt(t[0])+', u₁ = '+fmtInt(t[1])+', u₂ = '+fmtInt(t[2])+'.<br>'
+          +'u₁ − u₀ = '+fmtInt(t[1]-t[0])+' et u₂ − u₁ = '+fmtInt(t[2]-t[1])+' : différences non égales, donc pas arithmétique.<br>'
+          +'u₁ / u₀ = '+fmtF(F(t[1],t[0]))+' et u₂ / u₁ = '+fmtF(F(t[2],t[1]))+' : quotients non égaux, donc pas géométrique.<br>'
+          +'La suite n’est <strong>ni arithmétique ni géométrique</strong>.';
+      }
+      const c=mkChoices(correct,cands.concat([N,A(F(1)),G(F(2)),A(F(-1))]));
+      return {m:'nature',def:def,opts:c.opts,correct:c.correct,ex:ex};
+    },
+    prompt:q=>'Quelle est la nature de la suite (uₙ) définie pour tout n ∈ ℕ par '+q.def+' ?',
+    choices:q=>q.opts,
+    solve:q=>({choice:q.correct}),
+    check:(q,ans)=>ans.choice===q.correct,
+    answer:q=>q.opts[q.correct],
+    explain:q=>q.ex
+  },
+  sum:{
+    label:'Sommes de termes',desc:'1 + 2 + … + n, 1 + q + … + qⁿ, termes consécutifs d’une suite.',target:{facile:40,moyen:60,difficile:90},
+    gen(L){
+      const kind=pick([['nat','pow'],['nat','pow','ar','ge'],['ar','arp','ge','gef']][L.lv]);
+      if(kind==='nat')return {m:'sum',kind:kind,N:rnd(10,L.lv===0?50:200)};
+      if(kind==='pow'){const q=pick([2,3]);return {m:'sum',kind:kind,q:F(q),u0:1,N:rnd(4,q===2?10:6)};}
+      if(kind==='ar')return {m:'sum',kind:kind,u0:rnd(-10,20),r:nz(-6,6),N:rnd(9,30)};
+      if(kind==='arp')return {m:'sum',kind:kind,first:rnd(-10,30),r:pick([2,3,4,5,-3,-4]),cnt:rnd(10,30)};
+      if(kind==='ge'){const q=pick([2,3,-2]);return {m:'sum',kind:kind,q:F(q),u0:nz(-5,5),N:rnd(4,q===3?5:7)};}
+      const q=pick([[1,2],[-1,2],[1,3]]),N=rnd(3,q[1]===3?4:6);
+      return {m:'sum',kind:'ge',q:q,u0:rnd(1,3)*Math.pow(q[1],N),N:N};
+    },
+    prompt(q){
+      if(q.kind==='nat')return 'Calcule '+m('S = 1 + 2 + 3 + … + '+q.N)+'.';
+      if(q.kind==='pow')return 'Calcule '+m('S = 1 + '+fmtF(q.q)+' + '+pw(q.q,2)+' + … + '+pw(q.q,q.N))+'.';
+      if(q.kind==='arp'){
+        const t=[0,1,2].map(function(i){return q.first+i*q.r;}),last=q.first+(q.cnt-1)*q.r;
+        return 'Calcule '+m('S = '+fmtInt(t[0])+' + '+par(t[1])+' + '+par(t[2])+' + … + '+par(last))+'.';
+      }
+      const nat=q.kind==='ar'?'arithmétique':'géométrique',rn=q.kind==='ar'?'r = '+fmtInt(q.r):'q = '+fmtF(q.q);
+      return '(uₙ) est la suite '+nat+' de premier terme '+m('u₀ = '+fmtInt(q.u0))+' et de raison '+m(rn)+'. Calcule '+m('S = u₀ + u₁ + … + '+u(q.N))+'.';
+    },
+    fields:()=>[{label:'S ='}],
+    solve:q=>({vals:[fmtF(sumVal(q))]}),
+    check:(q,ans)=>eqNum(parseNum(ans.vals[0]),sumVal(q)),
+    answer:q=>'S = '+fmtF(sumVal(q)),
+    explain:q=>explainSum(q)
+  },
+  var:{
+    label:'Sens de variation',desc:'Croissante, décroissante, ou ni l’un ni l’autre ?',target:{facile:25,moyen:35,difficile:45},
+    gen(L){
+      const kind=pick([['ar','ge'],['ar','ge','rn','poly'],['ge','rn','poly','poly']][L.lv]);
+      if(kind==='ar')return {m:'var',kind:kind,c:rnd(-9,9),r:nz(-6,6)};
+      if(kind==='ge'){
+        const q=pick([[[2,1],[3,1],[1,2],[-2,1]],[[2,1],[3,1],[1,2],[-2,1],[1,3],[-1,2]],[[3,2],[2,3],[1,2],[-2,1],[5,4],[-1,3]]][L.lv]);
+        return {m:'var',kind:kind,c:L.lv===0?rnd(1,6):nz(-6,6),q:q};
+      }
+      if(kind==='rn'){
+        const s=pick([1,-1]),t=pick(['quad','lin','mix']);
+        const P=t==='quad'?[s*rnd(1,3),0,s*rnd(1,5)]:(t==='lin'?[0,s*rnd(1,4),s*rnd(1,6)]:[0,s*rnd(1,3),-s*rnd(1,8)]);
+        return {m:'var',kind:kind,u0:rnd(-5,5),P:P};
+      }
+      let a,b;do{a=nz(-3,3);b=nz(-6,6);}while(a+b===0);
+      return {m:'var',kind:'poly',a:a,b:b,c:rnd(-9,9),P:[0,2*a,a+b]};
+    },
+    prompt(q){
+      let d;
+      if(q.kind==='ar')d=m('uₙ = '+lin([[q.c,''],[q.r,'n']]));
+      else if(q.kind==='ge')d=m('uₙ = '+geoStr(q.c,q.q));
+      else if(q.kind==='rn')d=m('u₀ = '+fmtInt(q.u0))+' et '+m('uₙ₊₁ = '+lin([[1,'uₙ'],[q.P[0],'n²'],[q.P[1],'n'],[q.P[2],'']]));
+      else d=m('uₙ = '+lin([[q.a,'n²'],[q.b,'n'],[q.c,'']]));
+      return 'Quel est le sens de variation de la suite (uₙ) définie pour tout n ∈ ℕ par '+d+' ?';
+    },
+    choices:()=>VAR,
+    solve:q=>({choice:varOf(q)}),
+    check:(q,ans)=>ans.choice===varOf(q),
+    answer:q=>VAR[varOf(q)],
+    explain:q=>explainVar(q)
+  },
+  model:{
+    label:'Modéliser une situation',desc:'Traduire un énoncé (hausse, baisse en %) par une suite.',target:{facile:35,moyen:45,difficile:60},
+    gen(L){
+      const kind=pick([['ara','gup','gdn'],['ara','gup','gdn','rec'],['gup','gdn','rec','rec']][L.lv]);
+      let text,ask='Quelle expression donne uₙ ?',correct,cands,ex;
+      if(kind==='ara'){
+        const s=rnd(4,18)*50,k=rnd(1,8)*5;
+        text='Un abonnement coûte '+s+' € la première année. Son prix augmente ensuite de '+k+' € chaque année. On note uₙ le prix l’année n, avec u₀ = '+s+'.';
+        correct='uₙ = '+s+' + '+k+'n';
+        cands=['uₙ = '+s+' × '+k+'ⁿ','uₙ = '+s+' + '+k+'(n + 1)','uₙ = '+k+' + '+s+'n','uₙ = '+s+' × '+fmtDec(1+k/100)+'ⁿ'];
+        ex='Chaque année, on <strong>ajoute</strong> '+k+' € : (uₙ) est arithmétique de raison r = '+k+' et de premier terme u₀ = '+s+'.<br>Donc uₙ = u₀ + nr = <strong>'+s+' + '+k+'n</strong>.';
+      }else if(kind==='gup'){
+        const P=rnd(2,40)*500,t=pick(L.lv===0?[5,10,20]:[2,3,4,5,8,12,15]),c=1+t/100;
+        text='Une ville compte '+fmtBig(P)+' habitants en 2026. Sa population augmente de '+t+' % par an. On note uₙ la population en 2026 + n.';
+        correct='uₙ = '+fmtBig(P)+' × '+fmtDec(c)+'ⁿ';
+        cands=['uₙ = '+fmtBig(P)+' × '+fmtDec(t/100)+'ⁿ','uₙ = '+fmtBig(P)+' × '+fmtDec(1+t/10)+'ⁿ','uₙ = '+fmtBig(P)+' + '+fmtBig(P*t/100)+'n','uₙ = '+fmtBig(P)+' × '+fmtDec(1-t/100)+'ⁿ'];
+        ex='Augmenter de '+t+' %, c’est multiplier par 1 + '+t+'/100 = '+fmtDec(c)+'. On multiplie chaque année par le même nombre : (uₙ) est géométrique de raison q = '+fmtDec(c)+' et de premier terme u₀ = '+fmtBig(P)+'.<br>Donc uₙ = u₀ × qⁿ = <strong>'+fmtBig(P)+' × '+fmtDec(c)+'ⁿ</strong>.'
+          +(t<10?'<br>Attention : multiplier par '+fmtDec(1+t/10)+' correspondrait à une hausse de '+(t*10)+' %.':'');
+      }else if(kind==='gdn'){
+        const V=rnd(10,40)*1000,t=pick(L.lv===0?[10,20,25]:[5,8,12,15,18,30]),c=1-t/100;
+        text='Une voiture achetée '+fmtBig(V)+' € perd '+t+' % de sa valeur chaque année. On note uₙ sa valeur, en euros, après n années.';
+        correct='uₙ = '+fmtBig(V)+' × '+fmtDec(c)+'ⁿ';
+        cands=['uₙ = '+fmtBig(V)+' × '+fmtDec(t/100)+'ⁿ','uₙ = '+fmtBig(V)+' × '+fmtDec(1+t/100)+'ⁿ','uₙ = '+fmtBig(V)+' '+MINUS+' '+fmtBig(V*t/100)+'n'];
+        ex='Baisser de '+t+' %, c’est multiplier par 1 − '+t+'/100 = '+fmtDec(c)+'. (uₙ) est géométrique de raison q = '+fmtDec(c)+' et de premier terme u₀ = '+fmtBig(V)+'.<br>Donc uₙ = u₀ × qⁿ = <strong>'+fmtBig(V)+' × '+fmtDec(c)+'ⁿ</strong>.'
+          +'<br>Attention : multiplier par '+fmtDec(t/100)+' reviendrait à ne garder que '+t+' % de la valeur.';
+      }else{
+        const A=rnd(4,30)*50,t=pick([5,10,15,20,25]),k=rnd(2,12)*10,c=1-t/100;
+        text='Une association compte '+A+' adhérents en 2026. Chaque année, '+t+' % des adhérents ne renouvellent pas leur adhésion et '+k+' nouvelles personnes adhèrent. On note uₙ le nombre d’adhérents en 2026 + n.';
+        ask='Quelle relation de récurrence vérifie la suite (uₙ) ?';
+        correct='uₙ₊₁ = '+fmtDec(c)+'uₙ + '+k;
+        cands=['uₙ₊₁ = '+fmtDec(t/100)+'uₙ + '+k,'uₙ₊₁ = '+fmtDec(c)+'uₙ '+MINUS+' '+k,'uₙ₊₁ = '+fmtDec(1+t/100)+'uₙ + '+k,'uₙ₊₁ = uₙ '+MINUS+' '+t+' + '+k];
+        ex='Il reste '+(100-t)+' % des adhérents, soit '+fmtDec(c)+' × uₙ, auxquels s’ajoutent les '+k+' nouveaux : <strong>uₙ₊₁ = '+fmtDec(c)+'uₙ + '+k+'</strong>.<br>Cette suite n’est ni arithmétique ni géométrique : on ne peut pas écrire directement uₙ en fonction de n avec les formules du cours.';
+      }
+      const ch=mkChoices(correct,cands);
+      return {m:'model',kind:kind,text:text,ask:ask,opts:ch.opts,correct:ch.correct,ex:ex};
+    },
+    prompt:q=>q.text+'<br><strong>'+q.ask+'</strong>',
+    choices:q=>q.opts,
+    solve:q=>({choice:q.correct}),
+    check:(q,ans)=>ans.choice===q.correct,
+    answer:q=>q.opts[q.correct],
+    explain:q=>q.ex
+  }
+};
+function targetFor(q){return MODES[q.m].target[q.level||'moyen'];}
+/* ==LOGIC-END== */
+
+/* ------------------------------------------------------------------ */
+/* Interface                                                           */
+/* ------------------------------------------------------------------ */
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtTime(sec){sec=Math.round(sec);return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');}
+
+const store=(function(){
+  let ok=true;const mem={};
+  try{localStorage.setItem('__t','1');localStorage.removeItem('__t');}catch(e){ok=false;}
+  return {
+    ok:ok,
+    get(k,d){try{const v=ok?localStorage.getItem('su1:'+k):mem[k];return v==null?d:JSON.parse(v);}catch(e){return d;}},
+    set(k,v){const s=JSON.stringify(v);try{if(ok)localStorage.setItem('su1:'+k,s);else mem[k]=s;}catch(e){mem[k]=s;}}
+  };
+})();
+
+const S={kind:'normal',timed:true,mode:'mixte',level:'moyen',n:10,qs:[],i:0,results:[],active:0,qStart:0,state:'idle',timer:null,autoNext:null,lastInput:null};
+
+function show(id){
+  ['home','quiz','results','progress'].forEach(function(s){$(s).hidden=(s!==id);});
+  window.scrollTo(0,0);
+  if(id!=='quiz'){const h=$(id).querySelector('h1,h2');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}}
+}
+function checked(name){const e=document.querySelector('input[name="'+name+'"]:checked');return e?e.value:null;}
+function setChecked(name,val){const e=document.querySelector('input[name="'+name+'"][value="'+val+'"]');if(e)e.checked=true;}
+
+/* ---------- Accueil ---------- */
+function buildHome(){
+  const items=MODE_KEYS.map(function(k){return {k:k,label:MODES[k].label,desc:MODES[k].desc,t:true};});
+  items.push({k:'mixte',label:'Mixte',desc:'Un peu de tout, dans le désordre : le plus proche d’un contrôle.',t:null});
+  $('modeGrid').innerHTML=items.map(function(it){
+    return '<label class="mode"><input type="radio" name="mode" value="'+it.k+'"><span class="mbody"><strong>'+it.label+'</strong><small>'+it.desc+'</small><em'+(it.t?' data-t="'+it.k+'">':'>')+(it.t?'':'Objectif selon la question')+'</em></span></label>';
+  }).join('');
+  const prefs=store.get('prefs',{});
+  const qp=new URLSearchParams(location.search);
+  const mode=qp.get('mode')||prefs.mode||'mixte';
+  const level=qp.get('level')||prefs.level||'moyen';
+  const n=qp.get('n')||String(prefs.n||10);
+  setChecked('mode',(mode==='mixte'||MODES[mode])?mode:'mixte');
+  setChecked('level',LEVELS[level]?level:'moyen');
+  setChecked('len',['5','10','15'].indexOf(n)>=0?n:'10');
+  setChecked('timed',prefs.timed===false?'0':'1');
+  updateHint();updateBookBtn();
+  $('storeNote').hidden=store.ok;
+}
+function updateHint(){const l=checked('level');$('levelHint').textContent=LEVELS[l].desc+' Objectifs de temps '+(l==='facile'?'plus courts.':(l==='difficile'?'plus longs.':'standard.'));
+  document.querySelectorAll('#modeGrid em[data-t]').forEach(function(e){e.textContent='Objectif : '+MODES[e.dataset.t].target[l]+' s par question';});}
+function updateBookBtn(){const n=store.get('book',[]).length;$('bookBtn').textContent='Carnet d’erreurs ('+n+')';$('bookBtn').disabled=n===0;}
+
+function makeQuestions(mode,level,n){
+  const L=LEVELS[level],out=[],seen=new Set();
+  let pool=[];
+  for(let i=0;i<n;i++){
+    let m=mode;
+    if(mode==='mixte'){if(!pool.length)pool=shuffle(MODE_KEYS.slice());m=pool.pop();}
+    let q,tries=0;
+    do{q=MODES[m].gen(L);q.level=level;tries++;}while(seen.has(JSON.stringify(q))&&tries<30);
+    seen.add(JSON.stringify(q));out.push(q);
+  }
+  return out;
+}
+
+function begin(kind,qs,meta){
+  S.kind=kind;S.qs=qs;S.i=0;S.results=[];S.active=0;S.meta=meta||{};
+  S.timed=checked('timed')!=='0';$('timers').hidden=!S.timed;
+  clearInterval(S.timer);S.timer=setInterval(tick,200);
+  show('quiz');showQuestion();
+}
+function startNormal(){
+  S.mode=checked('mode');S.level=checked('level');S.n=parseInt(checked('len'),10);
+  S.timed=checked('timed')!=='0';
+  store.set('prefs',{mode:S.mode,level:S.level,n:S.n,timed:S.timed});
+  begin('normal',makeQuestions(S.mode,S.level,S.n),{mode:S.mode,level:S.level});
+}
+function startBook(){
+  const b=store.get('book',[]).slice().sort(function(x,y){return x.ts-y.ts;}).slice(0,10);
+  if(!b.length)return;
+  begin('book',b.map(function(e){return JSON.parse(JSON.stringify(e.q));}),{});
+}
+
+/* ---------- Question ---------- */
+function showQuestion(){
+  clearTimeout(S.autoNext);
+  const q=S.qs[S.i],M=MODES[q.m];
+  $('qNum').textContent='Question '+(S.i+1)+' / '+S.qs.length;
+  $('qMode').textContent=M.label;
+  $('pfill').style.width=(S.i/S.qs.length*100)+'%';
+  $('qPrompt').innerHTML=M.prompt(q);
+  $('formMsg').textContent='';$('feedback').innerHTML='';
+  const fl=M.fields?M.fields(q):null;
+  const box=$('qFields');box.innerHTML='';
+  if(fl){
+    fl.forEach(function(f,i){
+      const d=document.createElement('div');d.className='field';
+      d.innerHTML='<label for="f'+i+'">'+f.label+'</label><input id="f'+i+'" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="'+(i===fl.length-1?'done':'next')+'">';
+      box.appendChild(d);
+    });
+  }
+  const ch=M.choices?M.choices(q):null;
+  const cbox=$('qChoices');cbox.innerHTML='';
+  if(ch){
+    ch.forEach(function(t,i){
+      const b=document.createElement('button');b.type='button';b.className='choice';b.dataset.i=String(i);
+      b.innerHTML='<span style="opacity:.6;font-family:system-ui,sans-serif;font-size:.85rem;margin-right:8px">'+(i+1)+'</span>'+esc(t);
+      cbox.appendChild(b);
+    });
+  }
+  $('submitBtn').hidden=!fl;$('submitBtn').disabled=false;
+  $('keys').hidden=!fl;
+  S.state='answering';S.qStart=performance.now();
+  tick();
+  const first=box.querySelector('input');if(first)first.focus();
+}
+
+function tick(){
+  if(S.state!=='answering')return;
+  const now=performance.now(),qt=(now-S.qStart)/1000;
+  $('tTotal').textContent=fmtTime(S.active+qt);
+  const t=$('tQ');t.textContent=Math.floor(qt)+' s';
+  t.classList.toggle('over',qt>targetFor(S.qs[S.i]));
+}
+function msg(t){$('formMsg').textContent=t;}
+
+function submitFields(ev){
+  if(ev)ev.preventDefault();
+  if(S.state!=='answering')return;
+  const q=S.qs[S.i],M=MODES[q.m];
+  if(!M.fields)return;
+  const vals=Array.prototype.map.call($('qFields').querySelectorAll('input'),function(i){return i.value.trim();});
+  const filled=vals.filter(function(v){return v!=='';});
+  if(!filled.length)return msg('Écris une réponse avant de valider.');
+  if(vals.some(function(v){return v!==''&&!parseNum(v);}))return msg('Format non reconnu : écris un entier, une fraction (3/2) ou un décimal (1,5).');
+  if(M.needAll&&filled.length<vals.length)return msg('Remplis tous les champs.');
+  finish({vals:vals});
+}
+
+function describe(q,ans){
+  const M=MODES[q.m];
+  if(ans.choice!==undefined)return M.choices(q)[ans.choice];
+  const fl=M.fields(q);
+  return fl.map(function(f,i){return ans.vals[i]?f.label+' '+ans.vals[i]:null;}).filter(Boolean).join(' ; ');
+}
+function updateBook(q,ok){
+  let b=store.get('book',[]);const k=JSON.stringify(q);
+  const idx=b.findIndex(function(e){return JSON.stringify(e.q)===k;});
+  if(!ok){if(idx<0)b.unshift({q:q,ts:Date.now()});else b[idx].ts=Date.now();}
+  else if(S.kind!=='normal'&&idx>=0){b.splice(idx,1);}
+  store.set('book',b.slice(0,40));
+}
+
+function finish(ans){
+  if(S.state!=='answering')return;
+  S.state='feedback';
+  const q=S.qs[S.i],M=MODES[q.m];
+  const dt=(performance.now()-S.qStart)/1000;S.active+=dt;
+  const ok=!!M.check(q,ans);
+  S.results.push({q:q,ok:ok,given:describe(q,ans),dt:dt});
+  updateBook(q,ok);
+  Array.prototype.forEach.call($('qFields').querySelectorAll('input'),function(i){i.readOnly=true;});
+  $('submitBtn').disabled=true;
+  const btns=$('qChoices').querySelectorAll('button');
+  Array.prototype.forEach.call(btns,function(b,i){
+    b.disabled=true;
+    if(ans.choice!==undefined){
+      if(M.check(q,{choice:i}))b.classList.add('right');
+      else if(i===ans.choice)b.classList.add('wrong');
+    }
+  });
+  const last=S.i===S.qs.length-1;
+  const over=dt>targetFor(q)?' · plus long que l’objectif ('+targetFor(q)+' s)':'';
+  if(ok){
+    $('feedback').innerHTML='<div class="fb ok"><p><strong>✓ Correct</strong>'+(S.timed?' · '+dt.toFixed(1)+' s'+over:'')+'</p></div>';
+    S.autoNext=setTimeout(next,1500);
+  }else{
+    $('feedback').innerHTML='<div class="fb bad"><p><strong>✗ Pas tout à fait.</strong> Réponse attendue : <span class="math" style="font-size:1.1em">'+M.answer(q)+'</span></p>'
+      +'<div class="explain">'+M.explain(q)+'</div>'
+      +'<button type="button" class="btn primary" id="nextBtn">'+(last?'Voir le bilan':'Suivant →')+'</button></div>';
+    $('nextBtn').addEventListener('click',next);
+    $('nextBtn').focus();
+  }
+}
+function next(){
+  if(S.state!=='feedback')return;
+  clearTimeout(S.autoNext);
+  S.i++;
+  if(S.i>=S.qs.length)return endSession();
+  showQuestion();
+}
+
+/* ---------- Bilan ---------- */
+function endSession(){
+  clearInterval(S.timer);S.state='idle';
+  const n=S.results.length,score=S.results.filter(function(r){return r.ok;}).length;
+  const total=S.active,avg=total/n;
+  const avgTarget=S.qs.reduce(function(s,q){return s+targetFor(q);},0)/n;
+  const acc=Math.round(score/n*100);
+  if(S.kind==='normal'){
+    const h=store.get('hist',[]);
+    h.push({t:Date.now(),mode:S.meta.mode,level:S.meta.level,n:n,score:score,sec:Math.round(total),timed:S.timed});
+    store.set('hist',h.slice(-60));
+  }
+  const title=S.kind==='book'?'Bilan du carnet d’erreurs':(S.kind==='retry'?'Bilan des erreurs refaites':'Bilan de la série');
+  $('resTitle').textContent=title;
+  $('resStats').innerHTML=
+    '<div class="stat"><b>'+score+' / '+n+'</b><span>bonnes réponses</span></div>'+
+    '<div class="stat"><b>'+acc+' %</b><span>précision</span></div>'+
+    (S.timed?'<div class="stat"><b>'+fmtTime(total)+'</b><span>temps total</span></div>'+
+      '<div class="stat"><b>'+avg.toFixed(0)+' s</b><span>par question (objectif ≈ '+Math.round(avgTarget)+' s)</span></div>':'');
+  let m;
+  if(!S.timed)m=acc===100?'Tout est juste. Tu peux passer au niveau au-dessus, ou refaire la série avec le chrono.':(acc>=80?'Bonne précision. Reprends les erreurs ci-dessous avec la méthode.':'Commence par refaire les erreurs ci-dessous, en suivant la méthode pas à pas.');
+  else if(acc===100&&avg<=avgTarget)m='Série juste et dans les temps. Tu peux passer au niveau au-dessus.';
+  else if(acc===100)m='Tout est juste. Prochain objectif : descendre vers '+Math.round(avgTarget)+' s par question.';
+  else if(acc>=80)m='Bonne précision. Reprends les erreurs ci-dessous, puis vise le temps.';
+  else m='Commence par la précision : refais les erreurs avant de chronométrer plus serré.';
+  $('resMsg').textContent=m;
+  const errs=S.results.filter(function(r){return !r.ok;});
+  $('resErrors').innerHTML=errs.length?'<h3>À retravailler ('+errs.length+')</h3>'+errs.map(function(r){
+    const M=MODES[r.q.m];
+    return '<div class="card err"><div>'+M.prompt(r.q)+'</div>'
+      +'<p style="margin:6px 0 0">Ta réponse : '+esc(r.given)+'<br>Attendu : <span class="math" style="font-size:1.05em">'+M.answer(r.q)+'</span></p>'
+      +'<details><summary>Voir la méthode</summary><div class="explain">'+M.explain(r.q)+'</div></details></div>';
+  }).join(''):'';
+  const act=$('resActions');act.innerHTML='';
+  function btn(label,cls,fn){const b=document.createElement('button');b.type='button';b.className='btn '+cls;b.textContent=label;b.addEventListener('click',fn);act.appendChild(b);}
+  if(errs.length)btn('Refaire les erreurs','primary',function(){begin('retry',errs.map(function(r){return JSON.parse(JSON.stringify(r.q));}),{});});
+  if(S.kind==='normal')btn('Nouvelle série','',function(){begin('normal',makeQuestions(S.meta.mode,S.meta.level,S.qs.length),S.meta);});
+  btn('Copier le bilan','ghost',function(){
+    const label=S.kind==='normal'?(S.meta.mode==='mixte'?'Mixte':MODES[S.meta.mode].label)+' ('+LEVELS[S.meta.level].label.toLowerCase()+')':title;
+    const text='Suites · '+label+' : '+score+'/'+n+(S.timed?' · '+fmtTime(total)+' · '+avg.toFixed(0)+' s par question':' · sans chrono');
+    const done=function(){alert('Bilan copié.');};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,function(){window.prompt('Copie ce texte :',text);});
+    else window.prompt('Copie ce texte :',text);
+  });
+  btn('Accueil','ghost',goHome);
+  show('results');
+  updateBookBtn();
+}
+
+/* ---------- Progression ---------- */
+function showProgress(){
+  const h=store.get('hist',[]),book=store.get('book',[]);
+  let html='';
+  if(!h.length){html+='<p class="lead">Pas encore de série enregistrée. Fais une première série pour voir ta progression ici.</p>';}
+  else{
+    const nQ=h.reduce(function(s,x){return s+x.n;},0),ok=h.reduce(function(s,x){return s+x.score;},0);
+    /* Les séries sans chrono ne comptent pas dans les temps moyens. */
+    const th=h.filter(function(x){return x.timed!==false;}),tQ=th.reduce(function(s,x){return s+x.n;},0),sec=th.reduce(function(s,x){return s+x.sec;},0);
+    const perQ=function(s,q){return q?(s/q).toFixed(0)+' s':'—';};
+    html+='<div class="stats">'
+      +'<div class="stat"><b>'+h.length+'</b><span>séries</span></div>'
+      +'<div class="stat"><b>'+nQ+'</b><span>questions</span></div>'
+      +'<div class="stat"><b>'+Math.round(ok/nQ*100)+' %</b><span>précision globale</span></div>'
+      +'<div class="stat"><b>'+perQ(sec,tQ)+'</b><span>par question</span></div></div>';
+    html+='<h3>Par type d’entraînement</h3><div class="tablewrap"><table><thead><tr><th>Type</th><th>Séries</th><th>Précision</th><th>Temps / question</th></tr></thead><tbody>';
+    const groups={};
+    h.forEach(function(x){const g=groups[x.mode]||(groups[x.mode]={n:0,q:0,ok:0,tq:0,sec:0});g.n++;g.q+=x.n;g.ok+=x.score;if(x.timed!==false){g.tq+=x.n;g.sec+=x.sec;}});
+    Object.keys(groups).forEach(function(k){
+      const g=groups[k];
+      html+='<tr><td>'+(k==='mixte'?'Mixte':(MODES[k]?MODES[k].label:esc(k)))+'</td><td>'+g.n+'</td><td>'+Math.round(g.ok/g.q*100)+' %</td><td>'+perQ(g.sec,g.tq)+'</td></tr>';
+    });
+    html+='</tbody></table></div>';
+    html+='<h3>Dernières séries</h3><div class="tablewrap"><table><thead><tr><th>Date</th><th>Type</th><th>Niveau</th><th>Score</th><th>Temps</th></tr></thead><tbody>';
+    h.slice(-10).reverse().forEach(function(x){
+      html+='<tr><td>'+new Date(x.t).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})+'</td><td>'+(x.mode==='mixte'?'Mixte':(MODES[x.mode]?MODES[x.mode].label:esc(x.mode)))+'</td><td>'+(LEVELS[x.level]?LEVELS[x.level].label:'')+'</td><td>'+x.score+'/'+x.n+'</td><td>'+(x.timed===false?'Sans chrono':fmtTime(x.sec))+'</td></tr>';
+    });
+    html+='</tbody></table></div>';
+  }
+  html+='<h3>Carnet d’erreurs</h3>';
+  if(!book.length)html+='<p class="lead">Le carnet est vide.</p>';
+  else{
+    const c={};book.forEach(function(e){c[e.q.m]=(c[e.q.m]||0)+1;});
+    html+='<p>'+book.length+' question'+(book.length>1?'s':'')+' à retravailler : '+Object.keys(c).map(function(k){return MODES[k].label.toLowerCase()+' ('+c[k]+')';}).join(', ')+'.</p>'
+      +'<div class="row"><button class="btn primary" id="progBook" type="button">Travailler le carnet</button></div>';
+  }
+  $('progBody').innerHTML=html;
+  const pb=$('progBook');if(pb)pb.addEventListener('click',startBook);
+  show('progress');
+}
+/* Confirmation en deux clics dans la page : confirm() est bloqué dans certains contextes (iframe, dialogues désactivés). */
+function confirmClick(btn,label,action){
+  if(btn.dataset.armed){disarm(btn);action();return;}
+  btn.dataset.armed='1';btn.dataset.label=btn.textContent;btn.textContent=label;btn.classList.add('confirm');
+  btn._t=setTimeout(function(){disarm(btn);},3000);
+}
+function disarm(btn){if(!btn.dataset.armed)return;clearTimeout(btn._t);btn.textContent=btn.dataset.label;delete btn.dataset.armed;btn.classList.remove('confirm');}
+function goHome(){disarm($('quitBtn'));clearInterval(S.timer);clearTimeout(S.autoNext);S.state='idle';updateBookBtn();show('home');}
+
+/* ---------- Événements ---------- */
+$('startBtn').addEventListener('click',startNormal);
+$('bookBtn').addEventListener('click',startBook);
+$('progBtn').addEventListener('click',showProgress);
+$('brandBtn').addEventListener('click',function(){if(!$('quiz').hidden&&S.state!=='idle')confirmClick($('quitBtn'),'Confirmer ?',goHome);else goHome();});
+$('progHome').addEventListener('click',goHome);
+$('progReset').addEventListener('click',function(){confirmClick(this,'Confirmer l’effacement ?',function(){store.set('hist',[]);store.set('book',[]);showProgress();updateBookBtn();});});
+$('quitBtn').addEventListener('click',function(){confirmClick(this,'Confirmer ?',goHome);});
+$('levelSeg').addEventListener('change',updateHint);
+$('qForm').addEventListener('submit',submitFields);
+$('qChoices').addEventListener('click',function(e){const b=e.target.closest('button.choice');if(b&&S.state==='answering')finish({choice:parseInt(b.dataset.i,10)});});
+$('qFields').addEventListener('input',function(){$('formMsg').textContent='';});
+$('qFields').addEventListener('focusin',function(e){if(e.target.tagName==='INPUT')S.lastInput=e.target;});
+$('qFields').addEventListener('keydown',function(e){
+  if(e.key!=='Enter')return;
+  const inputs=Array.prototype.slice.call($('qFields').querySelectorAll('input')),i=inputs.indexOf(e.target);
+  if(i>=0&&i<inputs.length-1&&inputs[i+1].value===''){e.preventDefault();inputs[i+1].focus();}
+});
+$('keys').addEventListener('mousedown',function(e){e.preventDefault();});
+$('keys').addEventListener('click',function(e){
+  const b=e.target.closest('button');const inp=S.lastInput;
+  if(!b||!inp||inp.readOnly||!document.body.contains(inp))return;
+  const k=b.dataset.k,s=inp.selectionStart==null?inp.value.length:inp.selectionStart,t=inp.selectionEnd==null?s:inp.selectionEnd;
+  inp.value=inp.value.slice(0,s)+k+inp.value.slice(t);inp.focus();inp.setSelectionRange(s+k.length,s+k.length);
+});
+document.addEventListener('keydown',function(e){
+  if(S.state==='feedback'&&e.key==='Enter'&&!$('quiz').hidden){e.preventDefault();next();return;}
+  if(S.state==='answering'&&!$('quiz').hidden&&/^[1-4]$/.test(e.key)&&!$('qChoices').hidden&&$('qChoices').children.length&&!document.activeElement.matches('input')){
+    const b=$('qChoices').children[parseInt(e.key,10)-1];if(b)b.click();
+  }
+});
+
+buildHome();
+// ==EXPOSE==
+})();
+</script>
+</body>
+</html>
